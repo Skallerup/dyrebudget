@@ -87,6 +87,27 @@ const guides = [
     readTime: "5 min",
     category: "Hund",
   },
+  {
+    slug: "hvad-koster-en-golden-retriever",
+    title: "Hvad koster en Golden Retriever?",
+    desc: "Ca. 1.540 kr./md. — fuld oversigt over foder, forsikring og grooming til Danmarks yndlingsrace.",
+    readTime: "5 min",
+    category: "Hund",
+  },
+  {
+    slug: "hvad-koster-en-labrador",
+    title: "Hvad koster en Labrador?",
+    desc: "Ca. 1.300 kr./md. — en af de billigste store hunderacer. Se hvad det reelt koster at eje en Labrador.",
+    readTime: "5 min",
+    category: "Hund",
+  },
+  {
+    slug: "billigste-katteracer",
+    title: "Billigste katteracer 2026",
+    desc: "De 5 billigste katte at eje rangeret efter månedspris. Fra Huskat til Russisk Blå.",
+    readTime: "5 min",
+    category: "Kat",
+  },
 ];
 
 export default function GuidesPage() {
