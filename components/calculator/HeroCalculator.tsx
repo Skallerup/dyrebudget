@@ -7,6 +7,7 @@ import { calculatePetCost } from "@/lib/calculator";
 import { formatCurrency } from "@/lib/calculator";
 import type { PetType, BudgetLevel } from "@/types";
 import { Button } from "@/components/ui/button";
+import { BreedCombobox } from "@/components/ui/breed-combobox";
 import {
   Select,
   SelectContent,
@@ -69,18 +70,12 @@ export function HeroCalculator() {
         </div>
 
         {/* Breed */}
-        <Select value={breedId} onValueChange={(v) => { setBreedId(v); setResult(null); }}>
-          <SelectTrigger>
-            <SelectValue placeholder="Vælg race..." />
-          </SelectTrigger>
-          <SelectContent>
-            {availableBreeds.map((b) => (
-              <SelectItem key={b.id} value={b.id}>
-                {b.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <BreedCombobox
+          breeds={availableBreeds}
+          value={breedId}
+          onChange={(v) => { setBreedId(v); setResult(null); }}
+          placeholder="Vælg race..."
+        />
 
         {/* Budget level */}
         <Select value={budgetLevel} onValueChange={(v) => { setBudgetLevel(v as BudgetLevel); setResult(null); }}>
