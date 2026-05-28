@@ -9,7 +9,6 @@ import { RecommendedProducts } from "@/components/shared/RecommendedProducts";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
 import { EmailCapture } from "@/components/shared/EmailCapture";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
@@ -190,11 +189,6 @@ export default async function BreedPage({ params }: Props) {
 
         {/* Methodology */}
         <MethodologyBox />
-
-        {/* Affiliate disclosure */}
-        <div className="mt-8">
-          <AffiliateDisclosure />
-        </div>
 
         {/* Related breeds */}
         {relatedBreeds.length > 0 && (

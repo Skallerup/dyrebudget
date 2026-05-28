@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { products } from "@/data/products";
 import { ProductCard } from "@/components/shared/ProductCard";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 
 export const metadata: Metadata = {
   title: "Bedste hundefoder til prisen 2024 — Sammenligning",
@@ -70,7 +69,6 @@ export default function BilligsteHundefodePage() {
         <p className="text-xs text-muted-foreground mt-2">* Baseret på 25 kg hund</p>
       </section>
 
-      <AffiliateDisclosure />
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-5">Anbefalede produkter</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

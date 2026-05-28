@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { getBreedBySlug } from "@/data/breeds";
 import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { formatCurrency } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
 
@@ -135,7 +134,6 @@ export default async function ComparisonPage({ params }: Props) {
         ))}
       </div>
 
-      <AffiliateDisclosure />
     </div>
   );
 }

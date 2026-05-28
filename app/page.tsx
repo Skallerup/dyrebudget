@@ -3,7 +3,6 @@ import Link from "next/link";
 import { HeroCalculator } from "@/components/calculator/HeroCalculator";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { FAQSection } from "@/components/shared/FAQSection";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { getCheapestBreeds, getMostExpensiveBreeds } from "@/data/breeds";
 import { breeds } from "@/data/breeds";
@@ -261,10 +260,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Affiliate disclosure */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AffiliateDisclosure />
-      </div>
     </>
   );
 }

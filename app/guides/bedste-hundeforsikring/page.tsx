@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { products } from "@/data/products";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
@@ -93,8 +92,6 @@ export default function BedsteHundeforsikringPage() {
           kundetilfredshed — så du kan vælge rigtigt første gang.
         </p>
       </div>
-
-      <AffiliateDisclosure />
 
       {/* Hurtig anbefaling */}
       <div className="mt-8 p-5 bg-navy-900 text-white rounded-2xl">
@@ -210,9 +207,6 @@ export default function BedsteHundeforsikringPage() {
         <FAQSection faqs={faqs} title="Spørgsmål om hundeforsikring" />
       </div>
 
-      <div className="mt-8">
-        <AffiliateDisclosure />
-      </div>
     </div>
   );
 }

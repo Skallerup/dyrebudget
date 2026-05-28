@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
-import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { products } from "@/data/products";
 import { ProductCard } from "@/components/shared/ProductCard";
 
@@ -80,7 +79,6 @@ export default function HundeforsikringPage() {
 
       <section className="mb-10">
         <h2 className="text-xl font-bold mb-5">Sammenlign forsikringsselskaber</h2>
-        <AffiliateDisclosure />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
           {insuranceProducts.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
