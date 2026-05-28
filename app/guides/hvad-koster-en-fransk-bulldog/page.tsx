@@ -8,7 +8,7 @@ import { AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Hvad koster en Fransk Bulldog? Pris 2026 — Komplet guide",
+  title: "Hvad koster en Fransk Bulldog? Pris 2026",
   description:
     "Fransk Bulldog er en af Danmarks dyreste racer at eje. Se månedspris, forsikringspris og typiske dyrlægeomkostninger. Er racen det rigtige valg for dig?",
   alternates: { canonical: "/guides/hvad-koster-en-fransk-bulldog" },

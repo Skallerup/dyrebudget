@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Bedste hundefoder til prisen 2024 — Sammenligning",
   description:
     "Sammenligning af hundefoder ud fra pris pr. kg, næringsindhold og kvalitet. Find det bedste hundefoder til dit budget.",
+  alternates: { canonical: "/guides/billigste-hundefoder" },
 };
 
 const foderTabel = [

@@ -5,6 +5,7 @@ import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { formatCurrency } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
+import { generateBreadcrumbJsonLd } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ comparison: string }>;
@@ -71,7 +72,14 @@ export default async function ComparisonPage({ params }: Props) {
   const cheaperCost = Math.min(costsA.monthlyCost, costsB.monthlyCost);
   const diff = Math.abs(costsA.monthlyCost - costsB.monthlyCost);
 
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: "Sammenlign", path: "/sammenlign" },
+    { name: `${breedA.name} vs. ${breedB.name}`, path: `/sammenlign/${comparison}` },
+  ]);
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <Breadcrumbs
         items={[
@@ -135,5 +143,6 @@ export default async function ComparisonPage({ params }: Props) {
       </div>
 
     </div>
+    </>
   );
 }

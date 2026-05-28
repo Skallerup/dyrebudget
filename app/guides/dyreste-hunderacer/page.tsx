@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "De 5 dyreste hunderacer at eje i Danmark 2024",
   description:
     "Disse hunderacer koster flest penge at eje i Danmark. Se hvad forsikring, dyrlæge og grooming koster for de dyreste racer.",
+  alternates: { canonical: "/guides/dyreste-hunderacer" },
 };
 
 export default function DyresteHunderacerPage() {

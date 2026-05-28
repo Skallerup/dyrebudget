@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Hundeforsikring guide 2024 — Er det nødvendigt?",
   description:
     "Er hundeforsikring nødvendigt? Hvad dækker den? Og hvad koster det? Komplet guide til hundeforsikring i Danmark.",
+  alternates: { canonical: "/guides/hundeforsikring" },
 };
 
 const faqs = [

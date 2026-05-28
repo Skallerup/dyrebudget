@@ -6,7 +6,8 @@ import { ArrowRight } from "lucide-react";
 export const metadata: Metadata = {
   title: "Guider — Alt om kæledyrsøkonomi",
   description:
-    "Komplette guider til kæledyrsøkonomi i Danmark. Hvad koster en hund, hvad koster en kat, billigste racer og meget mere.",
+    "Komplette guider til kæledyrsøkonomi i Danmark. Hvad koster en hund, kat, billigste racer og forsikring.",
+  alternates: { canonical: "/guides" },
 };
 
 const guides = [

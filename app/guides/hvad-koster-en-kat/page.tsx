@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Hvad koster en kat i Danmark? Komplet guide 2024",
   description:
     "Alt om katteudgifter i Danmark. Månedspriser, foder, forsikring og livstidspris for 8 populære katteracer.",
+  alternates: { canonical: "/guides/hvad-koster-en-kat" },
 };
 
 const faqs = [

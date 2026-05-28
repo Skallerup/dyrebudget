@@ -171,7 +171,9 @@ export default async function BreedPage({ params }: Props) {
             Sammenlign {breed.name} med en anden race
           </p>
           <Link
-            href={`/sammenlign/${breed.slug}-vs-labrador`}
+            href={breed.petType === "dog"
+              ? `/sammenlign/${breed.slug}-vs-labrador`
+              : `/sammenlign/${breed.slug}-vs-maine-coon`}
             className="text-sm text-navy-600 hover:text-navy-900 flex items-center gap-1 font-medium"
           >
             Gå til sammenligning

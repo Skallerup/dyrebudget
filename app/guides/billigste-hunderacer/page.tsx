@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "De 5 billigste hunderacer i Danmark 2024",
   description:
     "Se hvilke hunderacer der er billigst at eje i Danmark. Rangeret efter månedlig pris, omkostningsindeks og livstidspris.",
+  alternates: { canonical: "/guides/billigste-hunderacer" },
 };
 
 export default function BilligsteHunderacerPage() {

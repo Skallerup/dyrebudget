@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Budget til din første hund — Komplet startbudget",
   description:
     "Komplet startbudget til ny hundeejer i Danmark. Alt hvad du skal bruge det første år med specificerede priser.",
+  alternates: { canonical: "/guides/foerste-hund-budget" },
 };
 
 const equipmentList = [

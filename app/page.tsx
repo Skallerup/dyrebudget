@@ -47,8 +47,31 @@ export default function HomePage() {
   const cheapestCats = getCheapestBreeds("cat", 4);
   const mostExpensiveDogs = getMostExpensiveBreeds("dog", 4);
 
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "DyreBudget.dk",
+    url: "https://dyrebudget.dk",
+    description: "Dansk platform der beregner kæledyrsomkostninger for hunde og katte i Danmark.",
+    inLanguage: "da",
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "DyreBudget.dk",
+    url: "https://dyrebudget.dk",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: "https://dyrebudget.dk/hvad-koster/{search_term_string}" },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       {/* Hero */}
       <section className="relative bg-navy-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-navy-700 via-navy-900 to-navy-950" />
