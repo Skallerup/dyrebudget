@@ -18,7 +18,8 @@ const footerLinks = {
     { href: "/guides/hvad-koster-en-hund", label: "Hvad koster en hund?" },
     { href: "/guides/hvad-koster-en-kat", label: "Hvad koster en kat?" },
     { href: "/guides/billigste-hunderacer", label: "Billigste hunderacer" },
-    { href: "/guides/hundeforsikring", label: "Hundeforsikring guide" },
+    { href: "/guides/bedste-hundeforsikring", label: "Bedste hundeforsikring" },
+    { href: "/statistik", label: "Statistik" },
   ],
   Om: [
     { href: "/om", label: "Om DyreBudget" },

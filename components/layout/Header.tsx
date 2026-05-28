@@ -6,12 +6,11 @@ import { Menu, X, Calculator, PawPrint } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/beregner", label: "Beregner" },
-  { href: "/hvad-koster", label: "Hvad koster" },
+  { href: "/hvad-koster", label: "Racer" },
   { href: "/sammenlign", label: "Sammenlign" },
   { href: "/guides", label: "Guider" },
+  { href: "/statistik", label: "Statistik" },
   { href: "/produkter", label: "Produkter" },
-  { href: "/quiz", label: "Quiz" },
 ];
 
 export function Header() {
