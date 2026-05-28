@@ -7,7 +7,6 @@ import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { getCheapestBreeds, getMostExpensiveBreeds } from "@/data/breeds";
 import { breeds } from "@/data/breeds";
-import { formatCurrency } from "@/lib/calculator";
 import { ArrowRight, TrendingDown, TrendingUp, Calculator, GitCompare, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { breeds } from "@/data/breeds";
 import { calculatePetCost } from "@/lib/calculator";
-import { formatCurrency } from "@/lib/calculator";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { RaceCard } from "@/components/shared/RaceCard";

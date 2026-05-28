@@ -7,13 +7,6 @@ import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInputs, PetType, BudgetLevel, ActivityLevel } from "@/types";
 import { Button } from "@/components/ui/button";
 import { CostResultCard } from "./CostResultCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { ChevronLeft, ChevronRight, Dog, Cat, CheckCircle2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 

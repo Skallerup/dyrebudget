@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(Get-ChildItem *)",
       "PowerShell(Get-Content *)",
-      "PowerShell(npm run *)"
+      "PowerShell(npm run *)",
+      "PowerShell(gh auth *)"
     ]
   }
 }

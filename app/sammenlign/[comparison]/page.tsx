@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { breeds, getBreedBySlug } from "@/data/breeds";
+import { getBreedBySlug } from "@/data/breeds";
 import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 import { formatCurrency } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
-import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   params: Promise<{ comparison: string }>;
@@ -14,8 +13,6 @@ interface Props {
 
 export async function generateStaticParams() {
   const params: { comparison: string }[] = [];
-  const dogBreeds = breeds.filter((b) => b.petType === "dog");
-  const catBreeds = breeds.filter((b) => b.petType === "cat");
 
   const popularPairs = [
     ["labrador", "golden-retriever"],

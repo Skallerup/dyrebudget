@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
 import type { Breed } from "@/types";
 import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface ComparisonTableProps {
   breedA: Breed;
@@ -25,8 +26,8 @@ export function ComparisonTable({ breedA, breedB }: ComparisonTableProps) {
 
   const rows: Array<{
     label: string;
-    a: string | React.ReactNode;
-    b: string | React.ReactNode;
+    a: string | ReactNode;
+    b: string | ReactNode;
     winner?: "a" | "b" | "tie";
   }> = [
     {

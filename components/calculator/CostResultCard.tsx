@@ -3,7 +3,6 @@
 import { PetCostResult, Breed } from "@/types";
 import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Lightbulb, TrendingDown } from "lucide-react";
 import { BreakdownChart } from "./BreakdownChart";
 

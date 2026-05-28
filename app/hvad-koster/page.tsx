@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { breeds } from "@/data/breeds";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";

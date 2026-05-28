@@ -3,7 +3,6 @@ import { getCheapestBreeds } from "@/data/breeds";
 import { calculatePetCost } from "@/lib/calculator";
 import { formatCurrency } from "@/lib/calculator";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { RaceCard } from "@/components/shared/RaceCard";
 import { FAQSection } from "@/components/shared/FAQSection";
 
 export const metadata: Metadata = {

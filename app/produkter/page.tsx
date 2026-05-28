@@ -3,22 +3,12 @@ import { products } from "@/data/products";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
-import type { ProductCategory } from "@/types";
 
 export const metadata: Metadata = {
   title: "Produkter — Bedste kæledyrsprodukter til prisen",
   description:
     "Find de bedste hundefoder, kattefoder, forsikringer og tilbehør. Sammenlign priser og klik videre til vores affiliate-partnere.",
 };
-
-const categories: { id: ProductCategory | "all"; label: string }[] = [
-  { id: "all", label: "Alle" },
-  { id: "hundefoder", label: "Hundefoder" },
-  { id: "kattefoder", label: "Kattefoder" },
-  { id: "hundeforsikring", label: "Hundeforsikring" },
-  { id: "katteforsikring", label: "Katteforsikring" },
-  { id: "loppe-og-flaat", label: "Loppe & Flåt" },
-];
 
 export default function ProdukterPage() {
   const featured = products.filter((p) => p.featured);
