@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { breeds } from "@/data/breeds";
+import { products } from "@/data/products";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dyrebudget.dk";
 
@@ -10,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/hvad-koster`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/sammenlign`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/produkter`, priority: 0.7, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/statistik`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/quiz`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/hvad-koster-en-hund`, priority: 0.8, changeFrequency: "monthly" as const },
@@ -70,6 +72,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "monthly" as const,
   }));
 
+  const productPages = products.map((product) => ({
+    url: `${SITE_URL}/produkter/${product.slug}`,
+    priority: 0.6,
+    changeFrequency: "monthly" as const,
+  }));
+
   return [
     ...staticPages.map((p) => ({
       url: p.url,
@@ -84,6 +92,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: p.priority,
     })),
     ...popularComparisons.map((p) => ({
+      url: p.url,
+      lastModified: new Date(),
+      changeFrequency: p.changeFrequency,
+      priority: p.priority,
+    })),
+    ...productPages.map((p) => ({
       url: p.url,
       lastModified: new Date(),
       changeFrequency: p.changeFrequency,

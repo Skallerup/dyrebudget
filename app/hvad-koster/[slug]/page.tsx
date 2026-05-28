@@ -77,6 +77,23 @@ export default async function BreedPage({ params }: Props) {
     },
   ];
 
+  const breedGuideMap: Record<string, string> = {
+    "labrador": "/guides/hvad-koster-en-labrador",
+    "golden-retriever": "/guides/hvad-koster-en-golden-retriever",
+    "fransk-bulldog": "/guides/hvad-koster-en-fransk-bulldog",
+    "schaeferhund": "/guides/hvad-koster-en-schaeferhund",
+    "beagle": "/guides/hvad-koster-en-beagle",
+    "chihuahua": "/guides/hvad-koster-en-chihuahua",
+    "gravhund": "/guides/hvad-koster-en-gravhund",
+    "border-collie": "/guides/hvad-koster-en-border-collie",
+    "puddel": "/guides/hvad-koster-en-puddel",
+    "rottweiler": "/guides/hvad-koster-en-rottweiler",
+    "berner-sennenhund": "/guides/hvad-koster-en-berner-sennenhund",
+    "cavapoo": "/guides/hvad-koster-en-cavapoo",
+    "cocker-spaniel": "/guides/hvad-koster-en-cocker-spaniel",
+  };
+  const breedGuideUrl = breedGuideMap[breed.slug] ?? null;
+
   const breedJsonLd = generateBreedJsonLd(breed);
   const faqJsonLd = generateFAQJsonLd(faqs);
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
@@ -180,6 +197,20 @@ export default async function BreedPage({ params }: Props) {
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
+
+        {/* Guide link — only for breeds with dedicated guide */}
+        {breedGuideUrl && (
+          <Link
+            href={breedGuideUrl}
+            className="mt-4 flex items-center justify-between p-4 bg-navy-50 border border-navy-200 rounded-xl hover:border-navy-400 hover:shadow-sm transition-all group"
+          >
+            <div>
+              <p className="text-sm font-semibold text-navy-900">Læs vores komplette {breed.name}-guide</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Sundhedsrisici, forsikringstips og hvad du skal vide inden køb</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-navy-600 group-hover:text-navy-900 shrink-0 transition-colors" />
+          </Link>
+        )}
 
         {/* Email capture */}
         <div className="mt-8">

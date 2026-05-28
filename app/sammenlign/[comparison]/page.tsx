@@ -5,7 +5,7 @@ import { ComparisonTable } from "@/components/shared/ComparisonTable";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { formatCurrency } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
-import { generateBreadcrumbJsonLd } from "@/lib/seo";
+import { generateBreadcrumbJsonLd, generateFAQJsonLd } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ comparison: string }>;
@@ -14,21 +14,41 @@ interface Props {
 export async function generateStaticParams() {
   const params: { comparison: string }[] = [];
 
-  const popularPairs = [
-    ["labrador", "golden-retriever"],
-    ["labrador", "beagle"],
-    ["golden-retriever", "labrador"],
-    ["fransk-bulldog", "mops"],
-    ["huskat", "maine-coon"],
-    ["huskat", "ragdoll"],
-    ["border-collie", "beagle"],
-    ["chihuahua", "gravhund"],
-    ["puddel", "beagle"],
+  const popularDogs = [
+    "labrador",
+    "golden-retriever",
+    "fransk-bulldog",
+    "mops",
+    "beagle",
+    "schaeferhund",
+    "border-collie",
+    "gravhund",
+    "chihuahua",
+    "puddel",
+    "cavapoo",
+    "cocker-spaniel",
+    "rottweiler",
+    "yorkshireterrier",
+    "jack-russell-terrier",
   ];
 
-  for (const [a, b] of popularPairs) {
-    params.push({ comparison: `${a}-vs-${b}` });
+  const popularCats = [
+    "huskat",
+    "maine-coon",
+    "ragdoll",
+    "british-shorthair",
+    "norsk-skovkat",
+  ];
+
+  // Generate all unique pairs within each group
+  for (const group of [popularDogs, popularCats]) {
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        params.push({ comparison: `${group[i]}-vs-${group[j]}` });
+      }
+    }
   }
+
   return params;
 }
 
@@ -77,9 +97,29 @@ export default async function ComparisonPage({ params }: Props) {
     { name: `${breedA.name} vs. ${breedB.name}`, path: `/sammenlign/${comparison}` },
   ]);
 
+  const faqJsonLd = generateFAQJsonLd([
+    {
+      question: `Hvad er billigst — ${breedA.name} eller ${breedB.name}?`,
+      answer: `${cheaper.name} er billigst med ${formatCurrency(cheaperCost)} om måneden på medium-niveau. Det er ${formatCurrency(diff)} billigere pr. måned end ${cheaper.id === breedA.id ? breedB.name : breedA.name}.`,
+    },
+    {
+      question: `Hvad koster en ${breedA.name} om måneden?`,
+      answer: `En ${breedA.name} koster ca. ${formatCurrency(costsA.monthlyCost)} om måneden på medium-budget med forsikring inkluderet.`,
+    },
+    {
+      question: `Hvad koster en ${breedB.name} om måneden?`,
+      answer: `En ${breedB.name} koster ca. ${formatCurrency(costsB.monthlyCost)} om måneden på medium-budget med forsikring inkluderet.`,
+    },
+    {
+      question: `Hvad er forskellen på ${breedA.name} og ${breedB.name} over et helt liv?`,
+      answer: `Beregnet over 12 år er prisforskellen ca. ${formatCurrency(diff * 12 * 12)}. ${cheaper.name} er den billigste over hele hundens liv på dette budget-niveau.`,
+    },
+  ]);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <Breadcrumbs
         items={[
