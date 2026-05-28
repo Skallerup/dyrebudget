@@ -1,4 +1,4 @@
-import type { Product } from "@/types";
+import type { Product, Breed } from "@/types";
 
 export const products: Product[] = [
   {
@@ -640,8 +640,6 @@ export const getProductsByCategory = (category: string): Product[] =>
 
 export const getFeaturedProducts = (petType?: "dog" | "cat" | "both"): Product[] =>
   products.filter((p) => p.featured && (!petType || p.petType === petType || p.petType === "both"));
-
-import type { Breed } from "@/types";
 
 export function getBreedRecommendedProducts(
   breed: Breed,
