@@ -66,6 +66,27 @@ const guides = [
     readTime: "6 min",
     category: "Forsikring",
   },
+  {
+    slug: "bedste-katteforsikring",
+    title: "Bedste katteforsikring 2026",
+    desc: "Hvornår er katteforsikring nødvendig? Vi gennemgår dækning, pris og hvornår det kan betale sig.",
+    readTime: "5 min",
+    category: "Forsikring",
+  },
+  {
+    slug: "hvalpe-budget",
+    title: "Budget til din første hvalp",
+    desc: "Hvad koster det første år med en hvalp? Komplet budget med alle poster — anskaffelse, udstyr, dyrlæge og foder.",
+    readTime: "6 min",
+    category: "Budget",
+  },
+  {
+    slug: "hvad-koster-en-fransk-bulldog",
+    title: "Hvad koster en Fransk Bulldog?",
+    desc: "Månedspris, forsikringsomkostninger og typiske dyrlægeregninger. En af Danmarks dyreste racer forklaret.",
+    readTime: "5 min",
+    category: "Hund",
+  },
 ];
 
 export default function GuidesPage() {
