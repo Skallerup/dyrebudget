@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Breed } from "@/types";
 import { formatCurrency } from "@/lib/calculator";
 import { ArrowRight } from "lucide-react";
+import { getBreedImage } from "@/data/breedImages";
 
 interface RaceCardProps {
   breed: Breed;
@@ -48,11 +50,27 @@ export function RaceCard({ breed, showCost = true }: RaceCardProps) {
     breed.monthlyVetAvg +
     breed.monthlyGrooming;
 
+  const imageUrl = getBreedImage(breed.slug);
+
   return (
     <Link
       href={`/hvad-koster/${breed.slug}`}
-      className="group block bg-card border border-border rounded-xl p-5 hover:border-navy-300 hover:shadow-md transition-all"
+      className="group block bg-card border border-border rounded-xl overflow-hidden hover:border-navy-300 hover:shadow-md transition-all"
     >
+      {/* Breed image */}
+      {imageUrl && (
+        <div className="relative h-40 w-full bg-muted overflow-hidden">
+          <Image
+            src={imageUrl}
+            alt={breed.name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        </div>
+      )}
+
+      <div className="p-5">
       {/* Top row: name + cost badge */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <div>
@@ -103,6 +121,7 @@ export function RaceCard({ breed, showCost = true }: RaceCardProps) {
           Se beregning
           <ArrowRight className="w-3 h-3" />
         </span>
+      </div>
       </div>
     </Link>
   );

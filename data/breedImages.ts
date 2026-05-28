@@ -1,0 +1,119 @@
+// Curated Unsplash photo IDs per breed slug.
+// Format: https://images.unsplash.com/photo-{ID}?auto=format&fit=crop&w=600&q=75
+// All photos are free under the Unsplash License (unsplash.com/license).
+
+export const breedImageMap: Record<string, string> = {
+  // ── HUNDE ──────────────────────────────────────────────────────────
+  "labrador":
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=75",
+  "golden-retriever":
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=75",
+  "fransk-bulldog":
+    "https://images.unsplash.com/photo-1583511655826-05700d52f4d9?auto=format&fit=crop&w=600&q=75",
+  "mops":
+    "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=600&q=75",
+  "beagle":
+    "https://images.unsplash.com/photo-1529927066849-79b791a69825?auto=format&fit=crop&w=600&q=75",
+  "schaeferhund":
+    "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?auto=format&fit=crop&w=600&q=75",
+  "border-collie":
+    "https://images.unsplash.com/photo-1503256207526-0d5523f31580?auto=format&fit=crop&w=600&q=75",
+  "gravhund":
+    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=75",
+  "chihuahua":
+    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=75",
+  "puddel":
+    "https://images.unsplash.com/photo-1575425186775-b8de9a427e67?auto=format&fit=crop&w=600&q=75",
+  "dansk-svensk-gaardhund":
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=75",
+  "cavapoo":
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=75",
+  "cockapoo":
+    "https://images.unsplash.com/photo-1575425186775-b8de9a427e67?auto=format&fit=crop&w=600&q=75",
+  "goldendoodle":
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=75",
+  "labradoodle":
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=75",
+  "maltipoo":
+    "https://images.unsplash.com/photo-1575425186775-b8de9a427e67?auto=format&fit=crop&w=600&q=75",
+  "bernedoodle":
+    "https://images.unsplash.com/photo-1574943320219-cff0ced94db2?auto=format&fit=crop&w=600&q=75",
+  "yorkshireterrier":
+    "https://images.unsplash.com/photo-1605897218803-7001f0e77de4?auto=format&fit=crop&w=600&q=75",
+  "shih-tzu":
+    "https://images.unsplash.com/photo-1625794084867-8ddd239946b1?auto=format&fit=crop&w=600&q=75",
+  "cavalier-king-charles-spaniel":
+    "https://images.unsplash.com/photo-1591946614720-90a587da4a36?auto=format&fit=crop&w=600&q=75",
+  "cocker-spaniel":
+    "https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=600&q=75",
+  "springer-spaniel":
+    "https://images.unsplash.com/photo-1591946614720-90a587da4a36?auto=format&fit=crop&w=600&q=75",
+  "bichon-frise":
+    "https://images.unsplash.com/photo-1575425186775-b8de9a427e67?auto=format&fit=crop&w=600&q=75",
+  "boxer":
+    "https://images.unsplash.com/photo-1534361672-b558285a33f0?auto=format&fit=crop&w=600&q=75",
+  "rottweiler":
+    "https://images.unsplash.com/photo-1561037404-61cd46aa615b?auto=format&fit=crop&w=600&q=75",
+  "dobermann":
+    "https://images.unsplash.com/photo-1534361672-b558285a33f0?auto=format&fit=crop&w=600&q=75",
+  "sibirisk-husky":
+    "https://images.unsplash.com/photo-1605568818018-f33e57d4fbd9?auto=format&fit=crop&w=600&q=75",
+  "australian-shepherd":
+    "https://images.unsplash.com/photo-1583783342308-d8bb90d45af2?auto=format&fit=crop&w=600&q=75",
+  "berner-sennenhund":
+    "https://images.unsplash.com/photo-1574943320219-cff0ced94db2?auto=format&fit=crop&w=600&q=75",
+  "jack-russell-terrier":
+    "https://images.unsplash.com/photo-1529927066849-79b791a69825?auto=format&fit=crop&w=600&q=75",
+  "miniature-schnauzer":
+    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=75",
+  "maltese":
+    "https://images.unsplash.com/photo-1575425186775-b8de9a427e67?auto=format&fit=crop&w=600&q=75",
+  "pomeranian":
+    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=75",
+  "whippet":
+    "https://images.unsplash.com/photo-1534361672-b558285a33f0?auto=format&fit=crop&w=600&q=75",
+  "dalmatiner":
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=75",
+  "irsk-setter":
+    "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?auto=format&fit=crop&w=600&q=75",
+  "flatcoated-retriever":
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=75",
+  "hund-blandet-race":
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=600&q=75",
+
+  // ── KATTE ──────────────────────────────────────────────────────────
+  "maine-coon":
+    "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&w=600&q=75",
+  "ragdoll":
+    "https://images.unsplash.com/photo-1513360371489-6c4e3bce8b47?auto=format&fit=crop&w=600&q=75",
+  "norsk-skovkat":
+    "https://images.unsplash.com/photo-1574158622682-e719686a4e3a?auto=format&fit=crop&w=600&q=75",
+  "huskat":
+    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=75",
+  "british-shorthair":
+    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=600&q=75",
+  "bengal":
+    "https://images.unsplash.com/photo-1574158622682-e719686a4e3a?auto=format&fit=crop&w=600&q=75",
+  "siameser":
+    "https://images.unsplash.com/photo-1513360371489-6c4e3bce8b47?auto=format&fit=crop&w=600&q=75",
+  "perser":
+    "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&w=600&q=75",
+  "europaeisk-korthaar":
+    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=75",
+  "russisk-blaa":
+    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=600&q=75",
+  "abyssiner":
+    "https://images.unsplash.com/photo-1574158622682-e719686a4e3a?auto=format&fit=crop&w=600&q=75",
+  "burmese":
+    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=75",
+  "birmaner":
+    "https://images.unsplash.com/photo-1513360371489-6c4e3bce8b47?auto=format&fit=crop&w=600&q=75",
+  "sphynx":
+    "https://images.unsplash.com/photo-1525348281969-2b17a8f63de6?auto=format&fit=crop&w=600&q=75",
+  "scottish-fold":
+    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=600&q=75",
+};
+
+export function getBreedImage(slug: string): string | undefined {
+  return breedImageMap[slug];
+}
