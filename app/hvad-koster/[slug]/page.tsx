@@ -1,0 +1,198 @@
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { breeds, getBreedBySlug } from "@/data/breeds";
+import { calculatePetCost } from "@/lib/calculator";
+import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
+import { CostResultCard } from "@/components/calculator/CostResultCard";
+import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import { FAQSection } from "@/components/shared/FAQSection";
+import { EmailCapture } from "@/components/shared/EmailCapture";
+import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
+import { MethodologyBox } from "@/components/shared/MethodologyBox";
+import { RaceCard } from "@/components/shared/RaceCard";
+import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  return breeds.map((b) => ({ slug: b.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const breed = getBreedBySlug(slug);
+  if (!breed) return {};
+  const monthly = breed.monthlyFoodCost.medium + breed.monthlyInsurance.medium + breed.monthlyVetAvg + breed.monthlyGrooming;
+  return {
+    title: `Hvad koster en ${breed.name}? Pris ${new Date().getFullYear()}`,
+    description: `${breed.name} koster ca. ${formatCurrency(monthly)} om måneden. Se fuld beregning med foder, forsikring, dyrlæge og livstidspris.`,
+    alternates: { canonical: `/hvad-koster/${slug}` },
+  };
+}
+
+export default async function BreedPage({ params }: Props) {
+  const { slug } = await params;
+  const breed = getBreedBySlug(slug);
+  if (!breed) notFound();
+
+  const defaultInputs = {
+    petType: breed.petType,
+    breedId: breed.id,
+    ageYears: 2,
+    budgetLevel: "medium" as const,
+    activityLevel: "medium" as const,
+    hasInsurance: true,
+    housingType: "house" as const,
+    groomingLevel: "mixed" as const,
+  };
+
+  const result = calculatePetCost(breed, defaultInputs);
+
+  const relatedBreeds = breeds
+    .filter((b) => b.petType === breed.petType && b.id !== breed.id)
+    .sort((a, b) => Math.abs(a.costIndex - breed.costIndex) - Math.abs(b.costIndex - breed.costIndex))
+    .slice(0, 4);
+
+  const faqs = [
+    {
+      question: `Hvad koster en ${breed.name} om måneden?`,
+      answer: `En ${breed.name} koster typisk ${formatCurrency(result.monthlyCost)} om måneden på medium-niveau. Det inkluderer foder (${formatCurrency(result.breakdown.food)}), forsikring (${formatCurrency(result.breakdown.insurance)}) og dyrlæge (${formatCurrency(result.breakdown.vet)}).`,
+    },
+    {
+      question: `Hvad koster en ${breed.name} det første år?`,
+      answer: `Første år med en ${breed.name} koster ca. ${formatCurrency(result.firstYearCost)}. Det inkluderer anskaffelsespris, grundudstyr og alle løbende udgifter for 12 måneder.`,
+    },
+    {
+      question: `Hvad er den samlede livstidspris for en ${breed.name}?`,
+      answer: `Samlet livstidspris for en ${breed.name} er ca. ${formatCurrency(result.lifetimeCost)} baseret på en gennemsnitlig levetid på ${Math.round((breed.lifespan.min + breed.lifespan.max) / 2)} år.`,
+    },
+    {
+      question: `Har ${breed.name} høje dyrlægeomkostninger?`,
+      answer: `${breed.name} har en ${breed.healthRisk === "low" ? "lav" : breed.healthRisk === "medium" ? "middel" : "høj"} sundhedsrisiko. Vi estimerer ${formatCurrency(breed.monthlyVetAvg)} pr. måned til dyrlæge inkl. forebyggende behandling.`,
+    },
+  ];
+
+  const breedJsonLd = generateBreedJsonLd(breed);
+  const faqJsonLd = generateFAQJsonLd(faqs);
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd([
+    { name: "Hvad koster", path: "/hvad-koster" },
+    { name: breed.name, path: `/hvad-koster/${breed.slug}` },
+  ]);
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breedJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <Breadcrumbs
+          items={[
+            { label: "Hvad koster", href: "/hvad-koster" },
+            { label: breed.name },
+          ]}
+        />
+
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">
+                Hvad koster en {breed.name}?
+              </h1>
+              <p className="text-muted-foreground max-w-2xl">{breed.description}</p>
+            </div>
+            <span className={`text-sm font-semibold px-3 py-1.5 rounded-full ${getCostIndexBgColor(breed.costIndex)}`}>
+              Indeks {breed.costIndex}/100
+            </span>
+          </div>
+        </div>
+
+        {/* Quick stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {[
+            { label: "Størrelse", value: breed.sizeClass === "tiny" ? "Mini" : breed.sizeClass === "small" ? "Lille" : breed.sizeClass === "medium" ? "Medium" : breed.sizeClass === "large" ? "Stor" : "Meget stor" },
+            { label: "Levetid", value: `${breed.lifespan.min}–${breed.lifespan.max} år` },
+            { label: "Sundhedsrisiko", value: breed.healthRisk === "low" ? "Lav" : breed.healthRisk === "medium" ? "Middel" : "Høj" },
+            { label: "Aktivitet", value: breed.activityLevel === "low" ? "Rolig" : breed.activityLevel === "medium" ? "Moderat" : "Aktiv" },
+          ].map((stat) => (
+            <div key={stat.label} className="bg-muted/50 rounded-xl p-4 text-center">
+              <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
+              <p className="font-semibold text-sm">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Traits */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {breed.traits.map((trait) => (
+            <span
+              key={trait}
+              className="text-sm px-3 py-1 bg-navy-900 text-white rounded-full font-medium"
+            >
+              {trait}
+            </span>
+          ))}
+        </div>
+
+        {/* Main result */}
+        <CostResultCard result={result} breed={breed} />
+
+        {/* Compare link */}
+        <div className="mt-8 p-4 bg-muted/50 rounded-xl flex items-center justify-between flex-wrap gap-3">
+          <p className="text-sm font-medium">
+            Sammenlign {breed.name} med en anden race
+          </p>
+          <Link
+            href={`/sammenlign/${breed.slug}-vs-labrador`}
+            className="text-sm text-navy-600 hover:text-navy-900 flex items-center gap-1 font-medium"
+          >
+            Gå til sammenligning
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Email capture */}
+        <div className="mt-8">
+          <EmailCapture breedName={breed.name} monthlyCost={result.monthlyCost} />
+        </div>
+
+        {/* FAQ */}
+        <FAQSection faqs={faqs} title={`Spørgsmål om ${breed.name}`} />
+
+        {/* Methodology */}
+        <MethodologyBox />
+
+        {/* Affiliate disclosure */}
+        <div className="mt-8">
+          <AffiliateDisclosure />
+        </div>
+
+        {/* Related breeds */}
+        {relatedBreeds.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-xl font-bold mb-5">Lignende racer</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {relatedBreeds.map((b) => (
+                <RaceCard key={b.id} breed={b} />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </>
+  );
+}
