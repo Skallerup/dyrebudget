@@ -1,0 +1,162 @@
+# DyreBudget.dk — Claude Code Kontekst
+
+## Hvad er dette projekt?
+
+**DyreBudget.dk** er en dansk pet economics platform — et production-ready affiliate SaaS/content site der hjælper brugere med at beregne kæledyrsomkostninger.
+
+**Ikke** en kæledyrsblog. **Er** et dataværktøj og beregningsplatform.
+
+## Tech Stack
+
+- **Next.js 15** (App Router) + TypeScript — strict mode
+- **Tailwind CSS** + egne shadcn-inspirerede UI-komponenter i `/components/ui/`
+- **Supabase** — PostgreSQL database med RLS
+- **Vercel** — hosting
+- **PostHog** — analytics via `lib/analytics.ts`
+- **React Hook Form + Zod** — forms og validering
+- **Recharts** — pie chart i breakdown
+
+## Projektstruktur
+
+```
+/app                    → Next.js App Router sider
+  /beregner            → Multi-step beregner (5 trin)
+  /hvad-koster/[slug]  → Individuelle race-sider (SSG, 19 racer)
+  /sammenlign/[comp]   → Sammenligningssider ([a]-vs-[b] format)
+  /guides/...          → SEO-guider (6 stk.)
+  /produkter           → Affiliate-produktkatalog
+  /quiz                → 5-trins kæledyrs-quiz
+  /om, /metode, /affiliate, /privatliv, /kontakt → Trust-sider
+  sitemap.ts, robots.ts → Auto-genereret SEO
+
+/components
+  /calculator          → MultiStepCalculator, HeroCalculator, CostResultCard, BreakdownChart
+  /layout             → Header, Footer
+  /shared             → RaceCard, ProductCard, FAQSection, ComparisonTable,
+                        EmailCapture, Breadcrumbs, AffiliateDisclosure, MethodologyBox
+  /ui                 → Badge, Button, Card, Input, Select, Progress
+
+/lib
+  calculator.ts        → CENTRAL BEREGNINGSMOTOR — ændringer her påvirker alle priser
+  supabase.ts          → Supabase klient (client + admin)
+  analytics.ts         → trackEvent() wrapper for PostHog
+  seo.ts               → generateMetadata(), JSON-LD helpers
+  utils.ts             → cn() (className merger)
+
+/data
+  breeds.ts            → 19 racer med alle cost-parametre + helper functions
+  products.ts          → Affiliate-produkter
+
+/types/index.ts        → Alle TypeScript types (Breed, Product, PetCostResult, etc.)
+/supabase/schema.sql   → Database schema + RLS policies
+/supabase/seed.sql     → Startdata til Supabase
+```
+
+## Centrale datastrukturer
+
+```typescript
+// En race
+interface Breed {
+  id, slug, name, petType, sizeClass, weightKg, lifespan,
+  coatType, activityLevel, healthRisk,
+  monthlyFoodCost: { budget, medium, premium },  // månedlig foder
+  monthlyInsurance: { budget, medium, premium }, // månedlig forsikring
+  monthlyVetAvg,    // gennemsnitlig dyrlæge pr. måned
+  monthlyGrooming,  // professionel grooming
+  oneTimeCosts,     // anskaffelsespris + grundudstyr
+  costIndex,        // 0-100 (lav = billig)
+  description, traits, popularIn
+}
+
+// Beregningsresultat
+interface PetCostResult {
+  dailyCost, monthlyCost, yearlyCost, firstYearCost, lifetimeCost,
+  breakdown: { food, insurance, vet, grooming, treats, toys, fleaTick, equipment, miscellaneous },
+  costIndex, costLabel, savingsTips
+}
+```
+
+## Beregningslogik (lib/calculator.ts)
+
+`calculatePetCost(breed, inputs)` returnerer `PetCostResult`.
+
+Vigtige inputs:
+- `budgetLevel`: "budget" | "medium" | "premium" — skalerer foder + forsikring
+- `activityLevel`: ×0.9 / ×1.0 / ×1.15 på foderpris
+- `hasInsurance`: false → insurance = 0
+- `groomingLevel`: "home" (×0.3) | "mixed" (×0.65) | "professional" (×1.0)
+- `firstYearCost` = yearlyCost + breed.oneTimeCosts + budget-afhængig opstartsomkostning
+
+## Database
+
+Supabase tabeller: `pets`, `cost_profiles`, `products`, `affiliate_partners`, `product_categories`, `articles`, `faqs`, `email_leads`, `calculator_sessions`, `comparisons`.
+
+**VIGTIGT:** Data i `/data/breeds.ts` og `/data/products.ts` er statisk og bruges direkte i koden. Supabase er forberedt til fremtidig dynamisk data og admin-interface.
+
+## Miljøvariable
+
+```env
+NEXT_PUBLIC_SITE_URL=https://dyrebudget.dk
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_POSTHOG_KEY=...
+NEXT_PUBLIC_POSTHOG_HOST=https://eu.posthog.com
+```
+
+Lokalt: kopier `.env.example` til `.env.local` og udfyld.
+
+## Kom i gang lokalt
+
+```bash
+npm install
+cp .env.example .env.local
+# Udfyld .env.local med Supabase credentials
+npm run dev
+```
+
+## Typiske udviklingsopgaver
+
+**Tilføj ny race:**
+1. Tilføj til `data/breeds.ts` — følg Breed-interfacet præcist
+2. Ingen andre filer skal ændres — siden genereres automatisk via `[slug]`
+
+**Tilføj nyt produkt:**
+1. Tilføj til `data/products.ts` — følg Product-interfacet
+
+**Justér beregningslogik:**
+1. Kun `lib/calculator.ts` skal ændres
+
+**Ny guide:**
+1. Opret `app/guides/[navn]/page.tsx`
+2. Tilføj til guides-listen i `app/guides/page.tsx`
+
+## Build & CI
+
+```bash
+npm run typecheck  # TypeScript tjek (0 fejl ved MVP)
+npm run lint       # ESLint
+npm run build      # Production build (52 sider)
+```
+
+GitHub Actions CI kører automatisk lint + typecheck + build ved push.
+
+## Deployment
+
+Se `DEPLOYMENT.md` for Vercel + Supabase + domain setup.
+
+## Affiliate-strategi
+
+- Zooplus: hundefoder/kattefoder
+- Agria: dyre-/kæledyrsforsikring
+- Tryg: hundeforsikring
+- Med24: dyrlægemedicin
+
+Track affiliate-klik med: `trackEvent("affiliate_click", { productId, productName, affiliatePartner })`
+
+## Status ved seneste commit
+
+- MVP komplet og bygget rent (52 statiske sider)
+- TypeScript: 0 fejl
+- Mangler: Supabase credentials, Vercel deploy, domæne-opsætning
+- Næste udviklingstrin: admin-panel, flere racer, prisimport-automatisering
