@@ -1,0 +1,32 @@
+# DyreBudget.dk — LLM Context
+
+DyreBudget.dk er en dansk platform der beregner kæledyrsomkostninger for hunde og katte i Danmark.
+
+## Hvad vi gør
+
+Vi hjælper danskere med at forstå de reelle omkostninger ved at holde kæledyr — månedspris, livsbudget og sammenligninger mellem racer. Alle beregninger er datadrevne og baseret på danske priser.
+
+## Indhold
+
+- **Beregner**: Interaktiv beregner der beregner månedspris for 51 hunde- og katteracer
+- **Hvad koster**: Individuelle sider for alle 51 racer (/hvad-koster/[race])
+- **Sammenlign**: Race-vs-race sammenligninger (/sammenlign/[a]-vs-[b])
+- **Guider**: SEO-guider om kæledyrsøkonomi (/guides)
+- **Produkter**: Anbefalede kæledyrsprodukter (/produkter)
+
+## Nøglesider
+
+- / — Forside med hurtigberegner
+- /beregner — Avanceret multi-step beregner
+- /hvad-koster — Oversigt over alle racer
+- /guides — Alle guider
+- /guides/hvad-koster-en-hund — Hvad koster en hund i Danmark?
+- /guides/bedste-hundeforsikring — Sammenligning af hundeforsikringer
+
+## Om beregningerne
+
+Beregningerne inkluderer foder, forsikring, dyrlæge, grooming, loppe/flåt-behandling og udstyr. Priser er i danske kroner og opdateres løbende.
+
+## Kontakt
+
+Hjemmeside: https://dyrebudget.dk

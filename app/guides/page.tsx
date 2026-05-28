@@ -59,6 +59,13 @@ const guides = [
     readTime: "6 min",
     category: "Budget",
   },
+  {
+    slug: "bedste-hundeforsikring",
+    title: "Bedste hundeforsikring 2026",
+    desc: "Vi sammenligner Agria vs Tryg og flere — find den forsikring der passer til din race.",
+    readTime: "6 min",
+    category: "Forsikring",
+  },
 ];
 
 export default function GuidesPage() {

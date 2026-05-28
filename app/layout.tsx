@@ -34,6 +34,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "da_DK",
     siteName: "DyreBudget.dk",
+    url: "https://dyrebudget.dk",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@dyrebudget",
+    creator: "@dyrebudget",
   },
   robots: {
     index: true,
