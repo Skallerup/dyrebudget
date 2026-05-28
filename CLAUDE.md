@@ -89,9 +89,22 @@ Vigtige inputs:
 
 ## Database
 
-Supabase tabeller: `pets`, `cost_profiles`, `products`, `affiliate_partners`, `product_categories`, `articles`, `faqs`, `email_leads`, `calculator_sessions`, `comparisons`.
+**Supabase projekt:** `dyrebudget-dk` — Region: Central EU (Frankfurt)
+**Project ref:** `rgztxwmqsfximovfrtmz`
+**Dashboard:** https://supabase.com/dashboard/project/rgztxwmqsfximovfrtmz
 
-**VIGTIGT:** Data i `/data/breeds.ts` og `/data/products.ts` er statisk og bruges direkte i koden. Supabase er forberedt til fremtidig dynamisk data og admin-interface.
+Tabeller (alle oprettet og seedet): `pets`, `cost_profiles`, `products`, `affiliate_partners`, `product_categories`, `articles`, `faqs`, `email_leads`, `calculator_sessions`, `comparisons`.
+
+**Setup på ny maskine:**
+```bash
+# .env.local skal oprettes manuelt (ikke i git)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=https://rgztxwmqsfximovfrtmz.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnenR4d21xc2Z4aW1vdmZydG16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTcxNDQsImV4cCI6MjA5NTUzMzE0NH0.RUu8CHZX1LLKg3h0GHJ1N-p3GMu4C3BoLsw530Sis94
+SUPABASE_SERVICE_ROLE_KEY=<hent fra Supabase dashboard>
+```
+
+**VIGTIGT:** Data i `/data/breeds.ts` og `/data/products.ts` er statisk og bruges direkte i koden. Supabase `email_leads` og `calculator_sessions` tabeller bruges til live data (email-capture og analytics).
 
 ## Miljøvariable
 
@@ -157,6 +170,7 @@ Track affiliate-klik med: `trackEvent("affiliate_click", { productId, productNam
 ## Status ved seneste commit
 
 - MVP komplet og bygget rent (52 statiske sider)
-- TypeScript: 0 fejl
-- Mangler: Supabase credentials, Vercel deploy, domæne-opsætning
-- Næste udviklingstrin: admin-panel, flere racer, prisimport-automatisering
+- TypeScript: 0 fejl · ESLint: 0 advarsler
+- Supabase: oprettet, schema kørt, 19 racer seedet, live på `rgztxwmqsfximovfrtmz`
+- Mangler: Vercel deploy, domæne-opsætning, PostHog API key
+- Næste udviklingstrin: admin-panel, Vercel deployment, flere racer, prisimport-automatisering
