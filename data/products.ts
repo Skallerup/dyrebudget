@@ -640,3 +640,45 @@ export const getProductsByCategory = (category: string): Product[] =>
 
 export const getFeaturedProducts = (petType?: "dog" | "cat" | "both"): Product[] =>
   products.filter((p) => p.featured && (!petType || p.petType === petType || p.petType === "both"));
+
+import type { Breed } from "@/types";
+
+export function getBreedRecommendedProducts(
+  breed: Breed,
+  hasInsurance = true
+): Product[] {
+  const recs: Product[] = [];
+
+  // Relevant foder (2 stk.)
+  const foodCat = breed.petType === "dog" ? "hundefoder" : "kattefoder";
+  const food = products
+    .filter((p) => p.category === foodCat)
+    .sort((a, b) => Number(b.featured) - Number(a.featured))
+    .slice(0, 2);
+  recs.push(...food);
+
+  // Forsikring hvis ikke forsikret eller høj sundhedsrisiko
+  if (!hasInsurance || breed.healthRisk === "high") {
+    const insCat = breed.petType === "dog" ? "hundeforsikring" : "katteforsikring";
+    const ins = products.find((p) => p.category === insCat && p.featured);
+    if (ins) recs.push(ins);
+  }
+
+  // Loppe/flåt — altid relevant
+  const flea = products.find((p) => p.category === "loppe-og-flaat" && p.featured);
+  if (flea) recs.push(flea);
+
+  // Grooming-tool til racer med meget pelspleje
+  if (breed.monthlyGrooming > 200) {
+    const groom = products.find((p) => p.id === "amazinganimals-groompro");
+    if (groom && !recs.find((r) => r.id === groom.id)) recs.push(groom);
+  }
+
+  // Led-tilskud til store/meget store racer
+  if (breed.petType === "dog" && (breed.sizeClass === "large" || breed.sizeClass === "giant")) {
+    const joint = products.find((p) => p.id === "pawfix-hofte-led");
+    if (joint && !recs.find((r) => r.id === joint.id)) recs.push(joint);
+  }
+
+  return recs.slice(0, 4);
+}

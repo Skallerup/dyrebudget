@@ -5,6 +5,8 @@ import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lightbulb, TrendingDown } from "lucide-react";
 import { BreakdownChart } from "./BreakdownChart";
+import { RecommendedProducts } from "@/components/shared/RecommendedProducts";
+import { getBreedRecommendedProducts } from "@/data/products";
 
 interface CostResultCardProps {
   result: PetCostResult;
@@ -123,6 +125,21 @@ export function CostResultCard({ result, breed }: CostResultCardProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* Anbefalede produkter baseret på race og beregning */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Produkter til din {breed.name}</CardTitle>
+          <p className="text-xs text-muted-foreground">Udvalgt baseret på din beregning</p>
+        </CardHeader>
+        <CardContent>
+          <RecommendedProducts
+            products={getBreedRecommendedProducts(breed, result.breakdown.insurance > 0)}
+            title=""
+            showAllLink={true}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { breeds, getBreedBySlug } from "@/data/breeds";
 import { calculatePetCost } from "@/lib/calculator";
 import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
+import { getBreedRecommendedProducts } from "@/data/products";
 import { CostResultCard } from "@/components/calculator/CostResultCard";
+import { RecommendedProducts } from "@/components/shared/RecommendedProducts";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
 import { EmailCapture } from "@/components/shared/EmailCapture";
@@ -150,6 +152,19 @@ export default async function BreedPage({ params }: Props) {
 
         {/* Main result */}
         <CostResultCard result={result} breed={breed} />
+
+        {/* Anbefalede produkter — placeret direkte efter resultatet */}
+        {(() => {
+          const recommendedProducts = getBreedRecommendedProducts(breed);
+          return recommendedProducts.length > 0 ? (
+            <div className="mt-8 p-5 bg-card border border-border rounded-2xl">
+              <RecommendedProducts
+                products={recommendedProducts}
+                title={`Populære produkter til ${breed.name}-ejere`}
+              />
+            </div>
+          ) : null;
+        })()}
 
         {/* Compare link */}
         <div className="mt-8 p-4 bg-muted/50 rounded-xl flex items-center justify-between flex-wrap gap-3">
