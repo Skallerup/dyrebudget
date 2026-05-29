@@ -4,13 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { breeds } from "@/data/breeds";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { BreedCombobox } from "@/components/ui/breed-combobox";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { ArrowLeftRight } from "lucide-react";
 
@@ -45,18 +39,12 @@ export default function SammenlignPage() {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-end">
           <div className="space-y-2">
             <label className="text-sm font-medium">Race 1</label>
-            <Select value={breedA} onValueChange={setBreedA}>
-              <SelectTrigger>
-                <SelectValue placeholder="Vælg race..." />
-              </SelectTrigger>
-              <SelectContent>
-                {breeds.map((b) => (
-                  <SelectItem key={b.id} value={b.id} disabled={b.id === breedB}>
-                    {b.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <BreedCombobox
+              breeds={breeds.filter((b) => b.id !== breedB)}
+              value={breedA}
+              onChange={setBreedA}
+              placeholder="Søg eller vælg race..."
+            />
           </div>
           <div className="flex justify-center pb-2">
             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
@@ -65,18 +53,12 @@ export default function SammenlignPage() {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Race 2</label>
-            <Select value={breedB} onValueChange={setBreedB}>
-              <SelectTrigger>
-                <SelectValue placeholder="Vælg race..." />
-              </SelectTrigger>
-              <SelectContent>
-                {breeds.map((b) => (
-                  <SelectItem key={b.id} value={b.id} disabled={b.id === breedA}>
-                    {b.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <BreedCombobox
+              breeds={breeds.filter((b) => b.id !== breedA)}
+              value={breedB}
+              onChange={setBreedB}
+              placeholder="Søg eller vælg race..."
+            />
           </div>
         </div>
         <div className="mt-5">

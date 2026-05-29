@@ -9,7 +9,7 @@ import type { CalculatorInputs, PetType, BudgetLevel, ActivityLevel } from "@/ty
 import { Button } from "@/components/ui/button";
 import { CostResultCard } from "./CostResultCard";
 import { EmailCapture } from "@/components/shared/EmailCapture";
-import { ChevronLeft, ChevronRight, Dog, Cat, CheckCircle2, Share2, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Dog, Cat, CheckCircle2, Share2, Check, Search, X } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 const STEPS = ["Kæledyr", "Race", "Profil", "Budget", "Resultat"];
@@ -39,6 +39,7 @@ export function MultiStepCalculator() {
   const [inputs, setInputs] = useState<CalculatorInputs>(defaultInputs);
   const [result, setResult] = useState<ReturnType<typeof calculatePetCost> | null>(null);
   const [sizeFilter, setSizeFilter] = useState<string>("alle");
+  const [breedSearch, setBreedSearch] = useState("");
   const [shareCopied, setShareCopied] = useState(false);
 
   const availableBreeds = getBreedsByPetType(inputs.petType);
@@ -123,10 +124,12 @@ export function MultiStepCalculator() {
     return true;
   }
 
-  // #2 — Filtered breeds for visual picker
-  const filteredBreeds = sizeFilter === "alle"
-    ? availableBreeds
-    : availableBreeds.filter((b) => b.sizeClass === sizeFilter);
+  // #2 — Filtered breeds for visual picker (size pills + text search)
+  const filteredBreeds = availableBreeds.filter((b) => {
+    const matchesSize = sizeFilter === "alle" || b.sizeClass === sizeFilter;
+    const matchesSearch = b.name.toLowerCase().includes(breedSearch.trim().toLowerCase());
+    return matchesSize && matchesSearch;
+  });
 
   const sizeOptions = ["alle", ...Array.from(new Set(availableBreeds.map((b) => b.sizeClass)))];
 
@@ -180,6 +183,27 @@ export function MultiStepCalculator() {
           <div>
             <h2 className="text-2xl font-bold mb-1">Vælg race</h2>
             <p className="text-muted-foreground text-sm">Klik på din race for at vælge den.</p>
+          </div>
+
+          {/* Search */}
+          <div className="flex items-center gap-2 rounded-lg border border-input bg-background px-3 h-10 focus-within:ring-2 focus-within:ring-ring">
+            <Search className="w-4 h-4 shrink-0 text-muted-foreground" />
+            <input
+              value={breedSearch}
+              onChange={(e) => setBreedSearch(e.target.value)}
+              placeholder="Søg race..."
+              className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+            />
+            {breedSearch && (
+              <button
+                type="button"
+                onClick={() => setBreedSearch("")}
+                className="rounded p-0.5 text-muted-foreground hover:bg-accent/20"
+                aria-label="Ryd søgning"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Size filter */}
@@ -245,6 +269,12 @@ export function MultiStepCalculator() {
               );
             })}
           </div>
+
+          {filteredBreeds.length === 0 && (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              Ingen racer matcher &quot;{breedSearch}&quot;.
+            </p>
+          )}
 
           {inputs.breedId && selectedBreed && (
             <div className="flex items-center gap-2 p-3 bg-mint-50 border border-mint-200 rounded-xl text-sm">
