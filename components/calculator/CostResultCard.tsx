@@ -8,6 +8,7 @@ import { Lightbulb, TrendingDown, Shield, ArrowRight, GitCompare, AlertTriangle 
 import { BreakdownChart } from "./BreakdownChart";
 import { RecommendedProducts } from "@/components/shared/RecommendedProducts";
 import { getBreedRecommendedProducts } from "@/data/products";
+import { affiliateUrl } from "@/lib/affiliate";
 
 interface CostResultCardProps {
   result: PetCostResult;
@@ -28,9 +29,10 @@ const breakdownLabels: Record<string, string> = {
 
 export function CostResultCard({ result, breed }: CostResultCardProps) {
   const noInsurance = result.breakdown.insurance === 0;
-  const insuranceAffiliate = breed.petType === "dog"
-    ? "https://www.agria.dk/hund/"
-    : "https://www.agria.dk/kat/";
+  const insuranceAffiliate = affiliateUrl(
+    breed.petType === "dog" ? "https://www.agria.dk/hund/" : "https://www.agria.dk/kat/",
+    { campaign: `insurance-cta-${breed.slug}` }
+  );
 
   return (
     <div className="space-y-6">

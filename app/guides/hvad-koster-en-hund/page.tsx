@@ -6,7 +6,7 @@ import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { getCheapestBreeds, getMostExpensiveBreeds } from "@/data/breeds";
 
 export const metadata: Metadata = {
-  title: "Hvad koster en hund i Danmark? Komplet guide 2024",
+  title: "Hvad koster en hund i Danmark? Komplet guide 2026",
   description:
     "Alt du skal vide om hundeudgifter i Danmark. Gennemsnitlige månedspriser, foder, forsikring, dyrlæge og livstidspris for alle populære racer.",
   alternates: { canonical: "/guides/hvad-koster-en-hund" },

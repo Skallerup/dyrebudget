@@ -3,6 +3,7 @@
 import type { Product } from "@/types";
 import { ExternalLink, Star, ShoppingBag } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { affiliateUrl } from "@/lib/affiliate";
 import Link from "next/link";
 
 interface RecommendedProductsProps {
@@ -63,7 +64,7 @@ function MiniProductCard({ product }: { product: Product }) {
 
   return (
     <a
-      href={product.affiliateUrl}
+      href={affiliateUrl(product.affiliateUrl, { campaign: product.id })}
       target="_blank"
       rel="noopener noreferrer sponsored"
       onClick={handleClick}

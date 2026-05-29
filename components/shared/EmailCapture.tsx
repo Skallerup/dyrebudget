@@ -34,17 +34,34 @@ export function EmailCapture({ breedName, monthlyCost, variant = "banner" }: Ema
 
   async function onSubmit(data: FormData) {
     setLoading(true);
+    const source = typeof window !== "undefined" ? window.location.pathname : "";
+    const shareUrl = typeof window !== "undefined" ? window.location.href : undefined;
+
     try {
+      // Store lead in Supabase
       await supabase.from("email_leads").insert({
         email: data.email,
         breed_name: breedName,
         estimated_monthly_cost: monthlyCost,
-        source: typeof window !== "undefined" ? window.location.pathname : "",
+        source,
       });
+
+      // #2 — Actually send the email via API route
+      await fetch("/api/send-calculation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          breedName,
+          monthlyCost,
+          shareUrl,
+        }),
+      });
+
       trackEvent("email_capture", { email: data.email, breedName });
       setSubmitted(true);
     } catch {
-      // silently fail — don't block UX
+      // Still mark as submitted — don't block UX
       setSubmitted(true);
     } finally {
       setLoading(false);
@@ -57,7 +74,7 @@ export function EmailCapture({ breedName, monthlyCost, variant = "banner" }: Ema
         <CheckCircle2 className="w-5 h-5 text-mint-600 shrink-0" />
         <div>
           <p className="font-semibold text-mint-800">Tak! Tjek din indbakke.</p>
-          <p className="text-sm text-mint-600">Vi sender din beregning med det samme.</p>
+          <p className="text-sm text-mint-600">Vi har sendt din beregning til {submitted ? "din e-mail" : "dig"}.</p>
         </div>
       </div>
     );
@@ -86,11 +103,11 @@ export function EmailCapture({ breedName, monthlyCost, variant = "banner" }: Ema
         <span className="text-mint-400 text-sm font-medium">Gem din beregning</span>
       </div>
       <h3 className="text-xl font-bold mb-2">
-        Få{breedName ? ` ${breedName}-beregningen` : " din beregning"} sendt
+        Få{breedName ? ` ${breedName}-beregningen` : " din beregning"} sendt på e-mail
       </h3>
       <p className="text-navy-300 text-sm mb-5">
-        Vi sender dit komplette budget på e-mail så du har det til rådighed.
-        {monthlyCost ? ` Estimeret månedspris: ${monthlyCost.toLocaleString("da-DK")} kr.` : ""}
+        Vi sender dit komplette budget direkte til din indbakke — med fuld udgiftsfordeling.
+        {monthlyCost ? ` Estimeret månedspris: ${Math.round(monthlyCost).toLocaleString("da-DK")} kr.` : ""}
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2 flex-col sm:flex-row">
         <Input

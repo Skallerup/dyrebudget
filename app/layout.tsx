@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -71,9 +72,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-screen flex flex-col antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <PostHogProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </PostHogProvider>
       </body>
     </html>
   );

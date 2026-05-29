@@ -15,7 +15,8 @@ export function generateMetadata({
   ogImage?: string;
 }): Metadata {
   const url = `${SITE_URL}${path}`;
-  const image = ogImage || `${SITE_URL}/og-default.jpg`;
+  // #3 — Use dynamic OG image route instead of non-existent /og-default.jpg
+  const image = ogImage || `${SITE_URL}/opengraph-image`;
 
   return {
     title: `${title} | ${SITE_NAME}`,
@@ -49,17 +50,24 @@ export function generateBreedJsonLd(breed: {
   description: string;
   slug: string;
 }) {
+  // #8 — Add datePublished/dateModified for E-E-A-T and Google freshness
+  const published = "2025-01-01T00:00:00Z";
+  const modified = new Date().toISOString();
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: `Hvad koster en ${breed.name}?`,
+    headline: `Hvad koster en ${breed.name}? Pris ${new Date().getFullYear()}`,
     description: breed.description,
     url: `${SITE_URL}/hvad-koster/${breed.slug}`,
+    datePublished: published,
+    dateModified: modified,
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
       url: SITE_URL,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/opengraph-image` },
     },
+    author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     inLanguage: "da",
   };
 }

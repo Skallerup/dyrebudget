@@ -4,7 +4,24 @@ import { products } from "@/data/products";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dyrebudget.dk";
 
+// #4 — Programmatically generate ALL comparison pairs so none are missing from sitemap
+function generateAllComparisons(): string[] {
+  const dogs = breeds.filter((b) => b.petType === "dog").map((b) => b.slug);
+  const cats = breeds.filter((b) => b.petType === "cat").map((b) => b.slug);
+  const pairs: string[] = [];
+  for (const group of [dogs, cats]) {
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        pairs.push(`${group[i]}-vs-${group[j]}`);
+      }
+    }
+  }
+  return pairs;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
+
   const staticPages = [
     { url: SITE_URL, priority: 1.0, changeFrequency: "weekly" as const },
     { url: `${SITE_URL}/beregner`, priority: 0.9, changeFrequency: "monthly" as const },
@@ -14,9 +31,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/statistik`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/quiz`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides`, priority: 0.7, changeFrequency: "monthly" as const },
-    { url: `${SITE_URL}/guides/hvad-koster-en-hund`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${SITE_URL}/guides/hvad-koster-en-kat`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${SITE_URL}/guides/billigste-hunderacer`, priority: 0.7, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/guides/hvad-koster-en-hund`, priority: 0.9, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/guides/hvad-koster-en-kat`, priority: 0.9, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/guides/billigste-hunderacer`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/dyreste-hunderacer`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/billigste-hundefoder`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/hundeforsikring`, priority: 0.7, changeFrequency: "monthly" as const },
@@ -47,61 +64,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const breedPages = breeds.map((breed) => ({
     url: `${SITE_URL}/hvad-koster/${breed.slug}`,
-    priority: 0.8,
+    lastModified: now,
     changeFrequency: "monthly" as const,
+    priority: 0.8,
   }));
 
-  const popularComparisons = [
-    "labrador-vs-golden-retriever",
-    "labrador-vs-beagle",
-    "fransk-bulldog-vs-mops",
-    "huskat-vs-maine-coon",
-    "border-collie-vs-beagle",
-    "chihuahua-vs-gravhund",
-    "golden-retriever-vs-labrador",
-    "cavapoo-vs-cockapoo",
-    "schæfer-vs-labrador",
-    "berner-sennenhund-vs-golden-retriever",
-    "cavalier-king-charles-spaniel-vs-cocker-spaniel",
-    "yorkshireterrier-vs-maltese",
-    "sibirisk-husky-vs-schæfer",
-    "ragdoll-vs-maine-coon",
-  ].map((comp) => ({
+  // #4 — All programmatically generated comparison pairs (was only 14 before)
+  const allComparisons = generateAllComparisons().map((comp) => ({
     url: `${SITE_URL}/sammenlign/${comp}`,
-    priority: 0.6,
+    lastModified: now,
     changeFrequency: "monthly" as const,
+    priority: 0.6,
   }));
 
   const productPages = products.map((product) => ({
     url: `${SITE_URL}/produkter/${product.slug}`,
-    priority: 0.6,
+    lastModified: now,
     changeFrequency: "monthly" as const,
+    priority: 0.6,
   }));
 
   return [
     ...staticPages.map((p) => ({
       url: p.url,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: p.changeFrequency,
       priority: p.priority,
     })),
-    ...breedPages.map((p) => ({
-      url: p.url,
-      lastModified: new Date(),
-      changeFrequency: p.changeFrequency,
-      priority: p.priority,
-    })),
-    ...popularComparisons.map((p) => ({
-      url: p.url,
-      lastModified: new Date(),
-      changeFrequency: p.changeFrequency,
-      priority: p.priority,
-    })),
-    ...productPages.map((p) => ({
-      url: p.url,
-      lastModified: new Date(),
-      changeFrequency: p.changeFrequency,
-      priority: p.priority,
-    })),
+    ...breedPages,
+    ...allComparisons,
+    ...productPages,
   ];
 }

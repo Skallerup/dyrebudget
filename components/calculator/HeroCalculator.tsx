@@ -103,7 +103,7 @@ export function HeroCalculator() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="text-center bg-navy-900 rounded-xl p-3">
               <p className="text-xs text-navy-400 mb-1">Per dag</p>
-              <p className="text-2xl font-bold text-white">{result.daily} kr.</p>
+              <p className="text-2xl font-bold text-white">{formatCurrency(result.daily)}</p>
             </div>
             <div className="text-center bg-muted/50 rounded-xl p-3">
               <p className="text-xs text-muted-foreground mb-1">Per måned</p>
