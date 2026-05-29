@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { breeds, getBreedsByPetType } from "@/data/breeds";
-import { getBreedImage } from "@/data/breedImages";
+import { BreedImage } from "@/components/shared/BreedImage";
 import { calculatePetCost } from "@/lib/calculator";
 import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInputs, PetType, BudgetLevel, ActivityLevel } from "@/types";
@@ -203,7 +202,6 @@ export function MultiStepCalculator() {
           {/* Breed grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[480px] overflow-y-auto pr-1 pb-1">
             {filteredBreeds.map((breed) => {
-              const imageUrl = getBreedImage(breed.slug);
               const selected = inputs.breedId === breed.id;
               return (
                 <button
@@ -217,19 +215,13 @@ export function MultiStepCalculator() {
                 >
                   {/* Image */}
                   <div className="relative h-24 w-full bg-muted overflow-hidden">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={breed.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 50vw, 33vw"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl">
-                        {breed.petType === "dog" ? "🐕" : "🐈"}
-                      </div>
-                    )}
+                    <BreedImage
+                      slug={breed.slug}
+                      alt={breed.name}
+                      petType={breed.petType}
+                      className="object-cover"
+                      sizes="(max-width: 640px) 50vw, 33vw"
+                    />
                     {selected && (
                       <div className="absolute inset-0 bg-navy-900/40 flex items-center justify-center">
                         <CheckCircle2 className="w-8 h-8 text-white" />

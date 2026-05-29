@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Breed } from "@/types";
 import { formatCurrency } from "@/lib/calculator";
 import { ArrowRight, Calculator } from "lucide-react";
-import { getBreedImage } from "@/data/breedImages";
+import { BreedImage } from "@/components/shared/BreedImage";
 
 interface RaceCardProps {
   breed: Breed;
@@ -51,24 +50,20 @@ export function RaceCard({ breed, showCost = true }: RaceCardProps) {
     breed.monthlyVetAvg +
     breed.monthlyGrooming;
 
-  const imageUrl = getBreedImage(breed.slug);
-
   return (
     <div className="group flex flex-col bg-card border border-border rounded-xl overflow-hidden hover:border-navy-300 hover:shadow-md transition-all">
       {/* Main clickable area → breed detail page */}
       <Link href={`/hvad-koster/${breed.slug}`} className="block flex-1">
         {/* Breed image */}
-        {imageUrl && (
-          <div className="relative h-40 w-full bg-muted overflow-hidden">
-            <Image
-              src={imageUrl}
-              alt={breed.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            />
-          </div>
-        )}
+        <div className="relative h-40 w-full bg-muted overflow-hidden">
+          <BreedImage
+            slug={breed.slug}
+            alt={breed.name}
+            petType={breed.petType}
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        </div>
 
         <div className="p-5 pb-3">
           {/* Top row: name + cost badge */}

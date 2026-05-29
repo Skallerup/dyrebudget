@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { breeds, getBreedBySlug } from "@/data/breeds";
 import { calculatePetCost } from "@/lib/calculator";
 import { formatCurrency, getCostIndexBgColor } from "@/lib/calculator";
@@ -13,7 +12,7 @@ import { EmailCapture } from "@/components/shared/EmailCapture";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
-import { getBreedImage } from "@/data/breedImages";
+import { BreedImage } from "@/components/shared/BreedImage";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -95,8 +94,6 @@ export default async function BreedPage({ params }: Props) {
     "cocker-spaniel": "/guides/hvad-koster-en-cocker-spaniel",
   };
   const breedGuideUrl = breedGuideMap[breed.slug] ?? null;
-  const breedImageUrl = getBreedImage(breed.slug);
-
   const breedJsonLd = generateBreedJsonLd(breed);
   const faqJsonLd = generateFAQJsonLd(faqs);
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
@@ -130,18 +127,16 @@ export default async function BreedPage({ params }: Props) {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start gap-6 flex-wrap sm:flex-nowrap">
-            {breedImageUrl && (
-              <div className="relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl overflow-hidden bg-muted">
-                <Image
-                  src={breedImageUrl}
-                  alt={breed.name}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, 192px"
-                />
-              </div>
-            )}
+            <div className="relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl overflow-hidden bg-muted">
+              <BreedImage
+                slug={breed.slug}
+                alt={breed.name}
+                petType={breed.petType}
+                priority
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 192px"
+              />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <h1 className="text-3xl font-bold">
