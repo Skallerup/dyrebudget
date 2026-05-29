@@ -167,10 +167,28 @@ Se `DEPLOYMENT.md` for Vercel + Supabase + domain setup.
 
 Track affiliate-klik med: `trackEvent("affiliate_click", { productId, productName, affiliatePartner })`
 
-## Status ved seneste commit
+## Status (maj 2026)
 
-- MVP komplet og bygget rent (52 statiske sider)
-- TypeScript: 0 fejl · ESLint: 0 advarsler
-- Supabase: oprettet, schema kørt, 19 racer seedet, live på `rgztxwmqsfximovfrtmz`
-- Mangler: Vercel deploy, domæne-opsætning, PostHog API key
-- Næste udviklingstrin: admin-panel, Vercel deployment, flere racer, prisimport-automatisering
+- **LIVE på https://dyrebudget.dk** (Vercel, auto-deploy ved push til `master`)
+- Bygger rent: 245 sider · TypeScript 0 fejl · ESLint 0 advarsler
+- 53 racer (38 hunde + 15 katte)
+- Supabase live på `rgztxwmqsfximovfrtmz` — tabeller inkl. `cost_submissions` (crowdsourcede priser)
+
+### Bygget i denne fase
+- **Race-billeder**: lokalt hostet i `/public/breeds/{slug}.jpg` (hentet fra Dog CEO API + TheCatAPI, race-kategoriseret). `BreedImage`-komponent viser emoji-fallback hvis fil mangler. Læg nye billeder direkte i mappen — ingen kodeændring.
+- **Favicon**: `app/icon.svg` (pote, navy/mint) + `app/apple-icon.tsx` (PNG via next/og)
+- **Race-søgning**: `BreedCombobox` på forside + sammenligning; søgefelt i beregner-grid
+- **Datavold (#4)**: `RealCostWidget` på race-sider ("Hvad betaler rigtige ejere?") → `/api/cost-submissions` (service-role, zod-valideret, rå data privat). `MethodologyBox` med klikbare kilder + "sidst opdateret"-dato.
+- **Resend** tilkoblet (transaktionsmail via `/api/send-calculation`)
+
+### Næste skridt (prioriteret "owner roadmap")
+1. **SEO/indeksering** — siden er live men IKKE indekseret i Google endnu. Opsæt Google Search Console (verifikation via env `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`), indsend sitemap, anmod om indeksering. Derefter programmatisk long-tail SEO. **Højeste prioritet — hele forretningen afhænger af organisk trafik.**
+2. **Forsikrings-monetisering** — byg rigtig "find billigste hundeforsikring"-sammenligning (Agria/Tryg/If/Dyrekassen); funnel beregnerens "første år"-chok herind. Højeste CPL.
+3. **Email-gated budgetrapport** — gate fuld livstidsberegning bag email (Resend-drip allerede klar)
+4. ✅ Datavold (crowdsourcede priser) — DONE
+
+### Vercel env-variable der SKAL være sat (produktion)
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (kræves af cost-submissions + email-leads), `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, evt. `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_POSTHOG_KEY`
+
+### Fortsæt på en anden computer
+`.env.local` er IKKE i git. Genskab den (se template ovenfor) — service-role-nøgle hentes fra Supabase dashboard, Resend-nøgle fra Resend dashboard. Kør `npm install && npm run dev`.
