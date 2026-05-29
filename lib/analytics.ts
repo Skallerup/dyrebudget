@@ -6,6 +6,7 @@ type EventName =
   | "affiliate_click"
   | "product_view"
   | "email_capture"
+  | "cost_submission"
   | "comparison_view"
   | "quiz_started"
   | "quiz_completed";

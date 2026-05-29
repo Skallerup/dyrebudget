@@ -166,9 +166,28 @@ CREATE TABLE IF NOT EXISTS comparisons (
 );
 
 -- ============================================
+-- COST SUBMISSIONS TABLE (crowdsourced real costs)
+-- ============================================
+CREATE TABLE IF NOT EXISTS cost_submissions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  breed_slug TEXT NOT NULL,
+  pet_type TEXT NOT NULL CHECK (pet_type IN ('dog', 'cat')),
+  monthly_cost DECIMAL(10,2) NOT NULL CHECK (monthly_cost BETWEEN 100 AND 100000),
+  has_insurance BOOLEAN,
+  region TEXT,
+  approved BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS cost_submissions_breed_idx ON cost_submissions(breed_slug);
+CREATE INDEX IF NOT EXISTS cost_submissions_created_at_idx ON cost_submissions(created_at);
+
+-- ============================================
 -- ROW LEVEL SECURITY
 -- ============================================
 ALTER TABLE email_leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cost_submissions ENABLE ROW LEVEL SECURITY;
+-- cost_submissions has no public policy — accessed only via service role (server route).
 ALTER TABLE calculator_sessions ENABLE ROW LEVEL SECURITY;
 
 -- Public can insert email leads

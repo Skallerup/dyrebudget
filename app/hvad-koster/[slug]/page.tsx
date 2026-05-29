@@ -10,6 +10,7 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
 import { EmailCapture } from "@/components/shared/EmailCapture";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
+import { RealCostWidget } from "@/components/shared/RealCostWidget";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { BreedImage } from "@/components/shared/BreedImage";
@@ -178,8 +179,22 @@ export default async function BreedPage({ params }: Props) {
           ))}
         </div>
 
+        {/* Price freshness */}
+        <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-mint-500" />
+          Priser opdateret {new Date().toLocaleDateString("da-DK", { month: "long", year: "numeric" })} · baseret på danske {new Date().getFullYear()}-data
+        </p>
+
         {/* Main result */}
         <CostResultCard result={result} breed={breed} />
+
+        {/* Crowdsourced real costs — community data moat */}
+        <RealCostWidget
+          breedSlug={breed.slug}
+          breedName={breed.name}
+          petType={breed.petType}
+          estimatedMonthly={result.monthlyCost}
+        />
 
         {/* Anbefalede produkter — placeret direkte efter resultatet */}
         {(() => {
