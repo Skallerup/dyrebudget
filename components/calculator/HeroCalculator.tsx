@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { breeds } from "@/data/breeds";
-import { calculatePetCost } from "@/lib/calculator";
-import { formatCurrency } from "@/lib/calculator";
+import { calculatePetCost, formatCurrency } from "@/lib/calculator";
 import type { PetType, BudgetLevel } from "@/types";
 import { Button } from "@/components/ui/button";
 import { BreedCombobox } from "@/components/ui/breed-combobox";
@@ -15,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calculator, ChevronRight } from "lucide-react";
+import { Calculator, ChevronRight, Zap } from "lucide-react";
 
 export function HeroCalculator() {
   const router = useRouter();
@@ -26,7 +25,9 @@ export function HeroCalculator() {
 
   const availableBreeds = breeds.filter((b) => b.petType === petType);
 
-  function handleCalculate() {
+  // #6 — Auto-calculate live preview whenever breed or budget changes
+  useEffect(() => {
+    if (!breedId) { setResult(null); return; }
     const breed = breeds.find((b) => b.id === breedId);
     if (!breed) return;
     const res = calculatePetCost(breed, {
@@ -40,7 +41,7 @@ export function HeroCalculator() {
       groomingLevel: "mixed",
     });
     setResult({ monthly: res.monthlyCost, daily: res.dailyCost });
-  }
+  }, [breedId, budgetLevel, petType]);
 
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-border p-6 w-full max-w-lg">
@@ -49,6 +50,12 @@ export function HeroCalculator() {
           <Calculator className="w-4 h-4 text-mint-400" />
         </div>
         <p className="font-semibold text-navy-900">Hurtig beregning</p>
+        {breedId && (
+          <span className="ml-auto flex items-center gap-1 text-xs text-mint-600 font-medium">
+            <Zap className="w-3 h-3" />
+            Live
+          </span>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -57,7 +64,7 @@ export function HeroCalculator() {
           {(["dog", "cat"] as PetType[]).map((type) => (
             <button
               key={type}
-              onClick={() => { setPetType(type); setBreedId(""); setResult(null); }}
+              onClick={() => { setPetType(type); setBreedId(""); }}
               className={`flex-1 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
                 petType === type
                   ? "bg-navy-900 text-white border-navy-900"
@@ -73,12 +80,12 @@ export function HeroCalculator() {
         <BreedCombobox
           breeds={availableBreeds}
           value={breedId}
-          onChange={(v) => { setBreedId(v); setResult(null); }}
-          placeholder="Vælg race..."
+          onChange={(v) => setBreedId(v)}
+          placeholder="Vælg race for at se pris..."
         />
 
         {/* Budget level */}
-        <Select value={budgetLevel} onValueChange={(v) => { setBudgetLevel(v as BudgetLevel); setResult(null); }}>
+        <Select value={budgetLevel} onValueChange={(v) => setBudgetLevel(v as BudgetLevel)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -88,40 +95,34 @@ export function HeroCalculator() {
             <SelectItem value="premium">Premium</SelectItem>
           </SelectContent>
         </Select>
-
-        <Button
-          onClick={handleCalculate}
-          disabled={!breedId}
-          className="w-full gap-2"
-          size="lg"
-        >
-          Beregn pris
-          <ChevronRight className="w-4 h-4" />
-        </Button>
       </div>
 
-      {result && (
+      {/* Live result */}
+      {result ? (
         <div className="mt-5 pt-5 border-t border-border">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground mb-1">Per dag</p>
-              <p className="text-2xl font-bold text-navy-900">{result.daily} kr.</p>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="text-center bg-navy-900 rounded-xl p-3">
+              <p className="text-xs text-navy-400 mb-1">Per dag</p>
+              <p className="text-2xl font-bold text-white">{result.daily} kr.</p>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-muted/50 rounded-xl p-3">
               <p className="text-xs text-muted-foreground mb-1">Per måned</p>
-              <p className="text-2xl font-bold text-navy-900">
-                {formatCurrency(result.monthly)}
-              </p>
+              <p className="text-2xl font-bold text-navy-900">{formatCurrency(result.monthly)}</p>
             </div>
           </div>
-          <button
-            onClick={() => router.push("/beregner")}
-            className="mt-4 w-full text-sm text-mint-600 hover:text-mint-700 font-medium flex items-center justify-center gap-1"
+          <Button
+            onClick={() => router.push(`/beregner?breed=${breedId}&budget=${budgetLevel}`)}
+            className="w-full gap-2"
+            size="lg"
           >
             Se fuld beregning med breakdown
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+            <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
+      ) : (
+        <p className="text-xs text-muted-foreground text-center mt-4">
+          Vælg en race for at se prisen med det samme
+        </p>
       )}
     </div>
   );

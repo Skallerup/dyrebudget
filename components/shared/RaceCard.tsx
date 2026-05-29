@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Breed } from "@/types";
 import { formatCurrency } from "@/lib/calculator";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Calculator } from "lucide-react";
 import { getBreedImage } from "@/data/breedImages";
 
 interface RaceCardProps {
@@ -43,6 +43,7 @@ function sizeLabel(size: string): string {
   return map[size] ?? size;
 }
 
+// #3 — Restructured: main content links to breed page, footer has two separate CTAs
 export function RaceCard({ breed, showCost = true }: RaceCardProps) {
   const monthlyEstimate =
     breed.monthlyFoodCost.medium +
@@ -53,76 +54,87 @@ export function RaceCard({ breed, showCost = true }: RaceCardProps) {
   const imageUrl = getBreedImage(breed.slug);
 
   return (
-    <Link
-      href={`/hvad-koster/${breed.slug}`}
-      className="group block bg-card border border-border rounded-xl overflow-hidden hover:border-navy-300 hover:shadow-md transition-all"
-    >
-      {/* Breed image */}
-      {imageUrl && (
-        <div className="relative h-40 w-full bg-muted overflow-hidden">
-          <Image
-            src={imageUrl}
-            alt={breed.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
+    <div className="group flex flex-col bg-card border border-border rounded-xl overflow-hidden hover:border-navy-300 hover:shadow-md transition-all">
+      {/* Main clickable area → breed detail page */}
+      <Link href={`/hvad-koster/${breed.slug}`} className="block flex-1">
+        {/* Breed image */}
+        {imageUrl && (
+          <div className="relative h-40 w-full bg-muted overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={breed.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            />
+          </div>
+        )}
+
+        <div className="p-5 pb-3">
+          {/* Top row: name + cost badge */}
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <div>
+              <h3 className="font-semibold text-foreground group-hover:text-navy-900 transition-colors leading-tight">
+                {breed.name}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {breed.petType === "dog" ? "Hund" : "Kat"} · {sizeLabel(breed.sizeClass)}
+              </p>
+            </div>
+            <span className={`text-xs font-semibold px-2 py-1 rounded-full shrink-0 ${costLabelColors(breed.costIndex)}`}>
+              {costLabel(breed.costIndex)}
+            </span>
+          </div>
+
+          {/* Monthly cost */}
+          {showCost && (
+            <div className="flex items-baseline gap-1 mb-3 mt-3">
+              <span className="text-2xl font-bold text-navy-900">{formatCurrency(monthlyEstimate)}</span>
+              <span className="text-xs text-muted-foreground">/md.</span>
+            </div>
+          )}
+
+          {/* Health risk */}
+          <div className={`inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full border mb-3 ${healthRiskColors(breed.healthRisk)}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${
+              breed.healthRisk === "low" ? "bg-green-500" :
+              breed.healthRisk === "medium" ? "bg-amber-500" : "bg-red-500"
+            }`} />
+            {healthRiskLabel(breed.healthRisk)}
+          </div>
+
+          {/* Traits */}
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {breed.traits.slice(0, 2).map((trait) => (
+              <span key={trait} className="text-xs px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
+                {trait}
+              </span>
+            ))}
+          </div>
+
+          {/* Lifespan */}
+          <p className="text-xs text-muted-foreground">{breed.lifespan.min}–{breed.lifespan.max} år levetid</p>
         </div>
-      )}
+      </Link>
 
-      <div className="p-5">
-      {/* Top row: name + cost badge */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div>
-          <h3 className="font-semibold text-foreground group-hover:text-navy-900 transition-colors leading-tight">
-            {breed.name}
-          </h3>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {breed.petType === "dog" ? "Hund" : "Kat"} · {sizeLabel(breed.sizeClass)}
-          </p>
-        </div>
-        <span className={`text-xs font-semibold px-2 py-1 rounded-full shrink-0 ${costLabelColors(breed.costIndex)}`}>
-          {costLabel(breed.costIndex)}
-        </span>
-      </div>
-
-      {/* Monthly cost */}
-      {showCost && (
-        <div className="flex items-baseline gap-1 mb-3 mt-3">
-          <span className="text-2xl font-bold text-navy-900">
-            {formatCurrency(monthlyEstimate)}
-          </span>
-          <span className="text-xs text-muted-foreground">/md.</span>
-        </div>
-      )}
-
-      {/* Health risk */}
-      <div className={`inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full border mb-3 ${healthRiskColors(breed.healthRisk)}`}>
-        <span className={`w-1.5 h-1.5 rounded-full ${
-          breed.healthRisk === "low" ? "bg-green-500" :
-          breed.healthRisk === "medium" ? "bg-amber-500" : "bg-red-500"
-        }`} />
-        {healthRiskLabel(breed.healthRisk)}
-      </div>
-
-      {/* Traits */}
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {breed.traits.slice(0, 2).map((trait) => (
-          <span key={trait} className="text-xs px-2 py-0.5 bg-muted rounded-full text-muted-foreground">
-            {trait}
-          </span>
-        ))}
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/60">
-        <span>{breed.lifespan.min}–{breed.lifespan.max} år levetid</span>
-        <span className="flex items-center gap-1 text-navy-600 font-medium group-hover:text-mint-600 transition-colors">
-          Se beregning
+      {/* #3 — Footer: two separate CTAs */}
+      <div className="flex border-t border-border/60">
+        <Link
+          href={`/hvad-koster/${breed.slug}`}
+          className="flex-1 flex items-center justify-center gap-1 py-2.5 text-xs font-medium text-muted-foreground hover:text-navy-700 hover:bg-muted/40 transition-colors"
+        >
           <ArrowRight className="w-3 h-3" />
-        </span>
+          Se detaljer
+        </Link>
+        <div className="w-px bg-border/60" />
+        <Link
+          href={`/beregner?breed=${breed.id}`}
+          className="flex-1 flex items-center justify-center gap-1 py-2.5 text-xs font-semibold text-mint-600 hover:text-mint-700 hover:bg-mint-50/60 transition-colors"
+        >
+          <Calculator className="w-3 h-3" />
+          Beregn
+        </Link>
       </div>
-      </div>
-    </Link>
+    </div>
   );
 }

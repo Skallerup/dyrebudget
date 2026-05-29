@@ -199,20 +199,35 @@ export default async function BreedPage({ params }: Props) {
           ) : null;
         })()}
 
-        {/* Compare link */}
-        <div className="mt-8 p-4 bg-muted/50 rounded-xl flex items-center justify-between flex-wrap gap-3">
-          <p className="text-sm font-medium">
-            Sammenlign {breed.name} med en anden race
+        {/* #9 — Enhanced compare section with multiple pairs */}
+        <div className="mt-8 p-5 bg-navy-50 border border-navy-100 rounded-2xl">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-7 h-7 rounded-lg bg-navy-900 flex items-center justify-center shrink-0">
+              <ArrowRight className="w-3.5 h-3.5 text-mint-400" />
+            </div>
+            <p className="font-semibold text-navy-900">Sammenlign {breed.name} med en anden race</p>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Hurtige sammenligninger — klik for at se siden-om-siden analyse:
           </p>
-          <Link
-            href={breed.petType === "dog"
-              ? `/sammenlign/${breed.slug}-vs-labrador`
-              : `/sammenlign/${breed.slug}-vs-maine-coon`}
-            className="text-sm text-navy-600 hover:text-navy-900 flex items-center gap-1 font-medium"
-          >
-            Gå til sammenligning
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            {relatedBreeds.slice(0, 3).map((b) => (
+              <Link
+                key={b.id}
+                href={`/sammenlign/${breed.slug}-vs-${b.slug}`}
+                className="text-xs px-3 py-2 bg-white border border-navy-200 rounded-full font-medium text-navy-700 hover:border-navy-400 hover:text-navy-900 transition-colors"
+              >
+                {breed.name} vs. {b.name}
+              </Link>
+            ))}
+            <Link
+              href="/sammenlign"
+              className="text-xs px-3 py-2 bg-navy-900 text-white rounded-full font-medium hover:bg-navy-800 transition-colors flex items-center gap-1"
+            >
+              Alle kombinationer
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
 
         {/* Guide link — only for breeds with dedicated guide */}

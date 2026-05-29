@@ -1,16 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { breeds, getBreedsByPetType } from "@/data/breeds";
+import { getBreedImage } from "@/data/breedImages";
 import { calculatePetCost } from "@/lib/calculator";
 import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInputs, PetType, BudgetLevel, ActivityLevel } from "@/types";
 import { Button } from "@/components/ui/button";
 import { CostResultCard } from "./CostResultCard";
-import { ChevronLeft, ChevronRight, Dog, Cat, CheckCircle2 } from "lucide-react";
+import { EmailCapture } from "@/components/shared/EmailCapture";
+import { ChevronLeft, ChevronRight, Dog, Cat, CheckCircle2, Share2, Check } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 const STEPS = ["Kæledyr", "Race", "Profil", "Budget", "Resultat"];
+
+const SIZE_LABELS: Record<string, string> = {
+  alle: "Alle",
+  tiny: "Mini",
+  small: "Lille",
+  medium: "Medium",
+  large: "Stor",
+  giant: "Meget stor",
+};
 
 const defaultInputs: CalculatorInputs = {
   petType: "dog",
@@ -27,11 +39,47 @@ export function MultiStepCalculator() {
   const [step, setStep] = useState(0);
   const [inputs, setInputs] = useState<CalculatorInputs>(defaultInputs);
   const [result, setResult] = useState<ReturnType<typeof calculatePetCost> | null>(null);
+  const [sizeFilter, setSizeFilter] = useState<string>("alle");
+  const [shareCopied, setShareCopied] = useState(false);
 
   const availableBreeds = getBreedsByPetType(inputs.petType);
   const selectedBreed = breeds.find((b) => b.id === inputs.breedId);
-
   const progress = ((step + 1) / STEPS.length) * 100;
+
+  // #8 — Read URL params on mount to pre-fill or auto-show result
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const breedParam = params.get("breed");
+    const budgetParam = params.get("budget") as BudgetLevel | null;
+    const insuranceParam = params.get("insurance");
+    const groomingParam = params.get("grooming");
+
+    if (!breedParam) return;
+    const breed = breeds.find((b) => b.id === breedParam);
+    if (!breed) return;
+
+    const newInputs: CalculatorInputs = {
+      ...defaultInputs,
+      petType: breed.petType,
+      breedId: breedParam,
+      ...(budgetParam && ["budget", "medium", "premium"].includes(budgetParam) && { budgetLevel: budgetParam }),
+      ...(insuranceParam !== null && { hasInsurance: insuranceParam !== "false" }),
+      ...(groomingParam && ["home", "mixed", "professional"].includes(groomingParam) && {
+        groomingLevel: groomingParam as CalculatorInputs["groomingLevel"],
+      }),
+    };
+
+    setInputs(newInputs);
+
+    if (budgetParam) {
+      const res = calculatePetCost(breed, newInputs);
+      setResult(res);
+      setStep(STEPS.length - 1);
+    } else {
+      setStep(1);
+    }
+  }, []);
 
   function handleNext() {
     if (step === 0) trackEvent("calculator_started", { petType: inputs.petType });
@@ -43,6 +91,13 @@ export function MultiStepCalculator() {
         const res = calculatePetCost(breed, inputs);
         setResult(res);
         setStep(STEPS.length - 1);
+        // #8 — Update URL to reflect current calculation
+        const url = new URL(window.location.href);
+        url.searchParams.set("breed", inputs.breedId);
+        url.searchParams.set("budget", inputs.budgetLevel);
+        url.searchParams.set("insurance", String(inputs.hasInsurance));
+        url.searchParams.set("grooming", inputs.groomingLevel);
+        window.history.replaceState({}, "", url.toString());
         trackEvent("calculator_completed", {
           breedId: breed.id,
           breedName: breed.name,
@@ -54,11 +109,27 @@ export function MultiStepCalculator() {
     }
   }
 
+  // #8 — Share current calculation
+  function handleShare() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2500);
+    });
+  }
+
   function canProceed(): boolean {
     if (step === 0) return true;
     if (step === 1) return !!inputs.breedId;
     return true;
   }
+
+  // #2 — Filtered breeds for visual picker
+  const filteredBreeds = sizeFilter === "alle"
+    ? availableBreeds
+    : availableBreeds.filter((b) => b.sizeClass === sizeFilter);
+
+  const sizeOptions = ["alle", ...Array.from(new Set(availableBreeds.map((b) => b.sizeClass)))];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -69,11 +140,7 @@ export function MultiStepCalculator() {
               <span
                 key={s}
                 className={`text-xs font-medium ${
-                  i === step
-                    ? "text-navy-900"
-                    : i < step
-                    ? "text-mint-600"
-                    : "text-muted-foreground"
+                  i === step ? "text-navy-900" : i < step ? "text-mint-600" : "text-muted-foreground"
                 }`}
               >
                 {i < step ? <CheckCircle2 className="inline w-3.5 h-3.5 mr-1" /> : null}
@@ -100,56 +167,100 @@ export function MultiStepCalculator() {
                     : "border-border hover:border-navy-300 bg-card"
                 }`}
               >
-                {type === "dog" ? (
-                  <Dog className="w-10 h-10" />
-                ) : (
-                  <Cat className="w-10 h-10" />
-                )}
-                <span className="font-semibold text-lg">
-                  {type === "dog" ? "Hund" : "Kat"}
-                </span>
+                {type === "dog" ? <Dog className="w-10 h-10" /> : <Cat className="w-10 h-10" />}
+                <span className="font-semibold text-lg">{type === "dog" ? "Hund" : "Kat"}</span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {/* Step 1: Breed */}
+      {/* Step 1: Breed — #2 visual grid with size filters */}
       {step === 1 && (
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Vælg race</h2>
-          <p className="text-muted-foreground text-sm">
-            Vælg den race du er interesseret i at beregne for.
-          </p>
-          <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
-            {availableBreeds.map((breed) => (
+          <div>
+            <h2 className="text-2xl font-bold mb-1">Vælg race</h2>
+            <p className="text-muted-foreground text-sm">Klik på din race for at vælge den.</p>
+          </div>
+
+          {/* Size filter */}
+          <div className="flex gap-2 flex-wrap">
+            {sizeOptions.map((size) => (
               <button
-                key={breed.id}
-                onClick={() => setInputs((i) => ({ ...i, breedId: breed.id }))}
-                className={`flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all ${
-                  inputs.breedId === breed.id
-                    ? "border-navy-900 bg-navy-50"
-                    : "border-border hover:border-navy-200 bg-card"
+                key={size}
+                onClick={() => setSizeFilter(size)}
+                className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-colors ${
+                  sizeFilter === size
+                    ? "bg-navy-900 text-white border-navy-900"
+                    : "border-border hover:border-navy-300 text-muted-foreground"
                 }`}
               >
-                <div>
-                  <p className="font-semibold">{breed.name}</p>
-                  <p className="text-sm text-muted-foreground capitalize">
-                    {breed.sizeClass} · {breed.activityLevel === "high" ? "Aktiv" : breed.activityLevel === "low" ? "Rolig" : "Moderat"}
-                  </p>
-                </div>
-                <div className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                  breed.costIndex <= 30
-                    ? "bg-green-100 text-green-700"
-                    : breed.costIndex <= 55
-                    ? "bg-amber-100 text-amber-700"
-                    : "bg-red-100 text-red-700"
-                }`}>
-                  {breed.costIndex <= 30 ? "Billig" : breed.costIndex <= 55 ? "Medium" : "Dyr"}
-                </div>
+                {SIZE_LABELS[size] ?? size}
               </button>
             ))}
           </div>
+
+          {/* Breed grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[480px] overflow-y-auto pr-1 pb-1">
+            {filteredBreeds.map((breed) => {
+              const imageUrl = getBreedImage(breed.slug);
+              const selected = inputs.breedId === breed.id;
+              return (
+                <button
+                  key={breed.id}
+                  onClick={() => setInputs((i) => ({ ...i, breedId: breed.id }))}
+                  className={`relative flex flex-col rounded-xl border-2 overflow-hidden text-left transition-all ${
+                    selected
+                      ? "border-navy-900 shadow-md"
+                      : "border-border hover:border-navy-300"
+                  }`}
+                >
+                  {/* Image */}
+                  <div className="relative h-24 w-full bg-muted overflow-hidden">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={breed.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl">
+                        {breed.petType === "dog" ? "🐕" : "🐈"}
+                      </div>
+                    )}
+                    {selected && (
+                      <div className="absolute inset-0 bg-navy-900/40 flex items-center justify-center">
+                        <CheckCircle2 className="w-8 h-8 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  {/* Info */}
+                  <div className="p-2.5">
+                    <p className="font-semibold text-sm leading-tight">{breed.name}</p>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
+                        breed.costIndex <= 35 ? "bg-green-100 text-green-700" :
+                        breed.costIndex <= 60 ? "bg-amber-100 text-amber-700" :
+                        "bg-red-100 text-red-700"
+                      }`}>
+                        {breed.costIndex <= 35 ? "Billig" : breed.costIndex <= 60 ? "Medium" : "Dyr"}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {inputs.breedId && selectedBreed && (
+            <div className="flex items-center gap-2 p-3 bg-mint-50 border border-mint-200 rounded-xl text-sm">
+              <CheckCircle2 className="w-4 h-4 text-mint-600 shrink-0" />
+              <span className="font-medium text-mint-800">{selectedBreed.name} valgt</span>
+              <span className="text-mint-600 ml-auto">Tryk Næste →</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -293,25 +404,41 @@ export function MultiStepCalculator() {
         </div>
       )}
 
-      {/* Step 4: Result */}
+      {/* Step 4: Result — #1 email capture + #8 share button */}
       {step === STEPS.length - 1 && result && selectedBreed && (
         <div>
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between gap-3 flex-wrap">
             <div>
               <h2 className="text-2xl font-bold">{selectedBreed.name}</h2>
               <p className="text-muted-foreground text-sm">
-                Beregnet med {inputs.budgetLevel === "budget" ? "budget" : inputs.budgetLevel === "medium" ? "medium" : "premium"}-niveau
+                {inputs.budgetLevel === "budget" ? "Budget" : inputs.budgetLevel === "medium" ? "Medium" : "Premium"}
                 {inputs.hasInsurance ? " · med forsikring" : " · uden forsikring"}
               </p>
             </div>
-            <button
-              onClick={() => { setStep(0); setResult(null); setInputs(defaultInputs); }}
-              className="text-sm text-muted-foreground hover:text-foreground underline"
-            >
-              Ny beregning
-            </button>
+            <div className="flex items-center gap-2">
+              {/* #8 — Share button */}
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border border-border hover:border-navy-300 font-medium text-muted-foreground hover:text-navy-700 transition-colors"
+              >
+                {shareCopied ? <Check className="w-3.5 h-3.5 text-mint-600" /> : <Share2 className="w-3.5 h-3.5" />}
+                {shareCopied ? "Kopieret!" : "Del"}
+              </button>
+              <button
+                onClick={() => { setStep(0); setResult(null); setInputs(defaultInputs); window.history.replaceState({}, "", window.location.pathname); }}
+                className="text-sm text-muted-foreground hover:text-foreground underline"
+              >
+                Ny beregning
+              </button>
+            </div>
           </div>
+
           <CostResultCard result={result} breed={selectedBreed} />
+
+          {/* #1 — Email capture at the highest-intent moment */}
+          <div className="mt-6">
+            <EmailCapture breedName={selectedBreed.name} monthlyCost={result.monthlyCost} />
+          </div>
         </div>
       )}
 
@@ -327,11 +454,7 @@ export function MultiStepCalculator() {
             <ChevronLeft className="w-4 h-4" />
             Tilbage
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className="gap-2"
-          >
+          <Button onClick={handleNext} disabled={!canProceed()} className="gap-2">
             {step === STEPS.length - 2 ? "Beregn nu" : "Næste"}
             <ChevronRight className="w-4 h-4" />
           </Button>

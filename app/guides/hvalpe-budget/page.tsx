@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { FAQSection } from "@/components/shared/FAQSection";
 import Link from "next/link";
-import { AlertTriangle, CheckCircle, TrendingDown } from "lucide-react";
+import { AlertTriangle, TrendingDown } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Budget til hvalp 2026 — Hvad koster det første år?",

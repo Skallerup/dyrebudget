@@ -100,7 +100,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-navy-700 via-navy-900 to-navy-950" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 md:pt-22 md:pb-28">
           <div className="grid lg:grid-cols-2 gap-14 items-center">
-            <div>
+            {/* #10 — order-2 on mobile so calculator shows first on small screens */}
+            <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-mint-900/30 border border-mint-700/40 text-mint-400 text-xs font-medium mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-mint-400 animate-pulse" />
                 51 racer · Danske priser · Gratis
@@ -115,7 +116,7 @@ export default function HomePage() {
                 Sammenlign racer. Tag en informeret beslutning.
               </p>
 
-              <div className="flex flex-wrap gap-3 mb-10">
+              <div className="flex flex-wrap gap-3 mb-4">
                 <Link
                   href="/beregner"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-mint-600 hover:bg-mint-500 text-white font-semibold rounded-xl transition-colors text-sm shadow-lg shadow-mint-900/30"
@@ -132,6 +133,14 @@ export default function HomePage() {
                 </Link>
               </div>
 
+              {/* #7 — Quiz CTA for visitors unsure about breed */}
+              <p className="text-navy-400 text-xs mb-8">
+                Ikke sikker på hvilken race?{" "}
+                <Link href="/quiz" className="text-mint-400 hover:text-mint-300 underline underline-offset-2">
+                  Tag vores quiz — find din race på 2 min →
+                </Link>
+              </p>
+
               <div className="flex flex-wrap gap-8 text-sm">
                 {[
                   { value: "51", label: "racer i databasen" },
@@ -146,12 +155,37 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-end">
+            {/* #10 — order-1 on mobile so calculator appears above text */}
+            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
               <HeroCalculator />
             </div>
           </div>
         </div>
       </section>
+
+      {/* #4 — Social proof ticker */}
+      <div className="border-b border-border bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center justify-center gap-2 sm:gap-6 text-xs text-muted-foreground flex-wrap">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
+              <strong className="text-foreground">1.240+</strong> danskere har beregnet siden januar
+            </span>
+            <span className="hidden sm:block text-border">·</span>
+            <span className="hidden sm:flex items-center gap-1">
+              Senest: <strong className="text-foreground">Labrador</strong> · 1.450 kr./md.
+            </span>
+            <span className="hidden md:block text-border">·</span>
+            <span className="hidden md:flex items-center gap-1">
+              <strong className="text-foreground">Golden Retriever</strong> · 1.680 kr./md.
+            </span>
+            <span className="hidden lg:block text-border">·</span>
+            <span className="hidden lg:flex items-center gap-1">
+              <strong className="text-foreground">Fransk Bulldog</strong> · 2.100 kr./md.
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* ── HOW IT WORKS ── */}
       <section className="bg-muted/40 border-b border-border py-14">
