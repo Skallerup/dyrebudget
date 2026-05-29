@@ -1,14 +1,10 @@
 import { ImageResponse } from "next/og";
-import { breeds, getBreedBySlug } from "@/data/breeds";
+import { getBreedBySlug } from "@/data/breeds";
 import { calculatePetCost, formatCurrency } from "@/lib/calculator";
 
 export const runtime = "edge";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-export async function generateStaticParams() {
-  return breeds.map((b) => ({ slug: b.slug }));
-}
 
 export default async function BreedOgImage({
   params,
