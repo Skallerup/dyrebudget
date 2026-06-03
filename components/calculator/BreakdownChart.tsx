@@ -19,7 +19,7 @@ const LABELS: Record<string, string> = {
   food: "Foder",
   insurance: "Forsikring",
   vet: "Dyrlæge",
-  grooming: "Grooming",
+  grooming: "Pelspleje",
   treats: "Godbidder",
   toys: "Legetøj",
   fleaTick: "Loppe/Flåt",

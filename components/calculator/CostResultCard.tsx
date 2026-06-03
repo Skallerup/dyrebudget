@@ -19,7 +19,7 @@ const breakdownLabels: Record<string, string> = {
   food: "Foder",
   insurance: "Forsikring",
   vet: "Dyrlæge",
-  grooming: "Grooming",
+  grooming: "Pelspleje",
   treats: "Godbidder",
   toys: "Legetøj",
   fleaTick: "Loppe/Flåt",
@@ -49,11 +49,16 @@ export function CostResultCard({ result, breed }: CostResultCardProps) {
       </div>
 
       {/* Cost index */}
-      <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/50">
-        <span className="text-sm text-muted-foreground">Race omkostningsindeks:</span>
-        <span className={`text-sm font-bold px-3 py-1 rounded-full ${getCostIndexBgColor(result.costIndex)}`}>
-          {result.costIndex}/100 — {result.costLabel.charAt(0).toUpperCase() + result.costLabel.slice(1)}
-        </span>
+      <div className="p-4 rounded-xl bg-muted/50">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-sm text-muted-foreground">Race-omkostningsindeks:</span>
+          <span className={`text-sm font-bold px-3 py-1 rounded-full ${getCostIndexBgColor(result.costIndex)}`}>
+            {result.costIndex}/100 — {result.costLabel.charAt(0).toUpperCase() + result.costLabel.slice(1)}
+          </span>
+        </div>
+        <p className="text-xs text-muted-foreground mt-2">
+          Et tal fra 0 til 100 der viser hvor dyr racen er at eje sammenlignet med andre — 0 = blandt de billigste, 100 = blandt de dyreste.
+        </p>
       </div>
 
       {/* Breakdown chart */}
@@ -69,7 +74,8 @@ export function CostResultCard({ result, breed }: CostResultCardProps) {
       {/* Breakdown table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Detaljeret breakdown</CardTitle>
+          <CardTitle className="text-base">Detaljeret oversigt — pr. måned</CardTitle>
+          <p className="text-xs text-muted-foreground">Hver post og hvor stor en del af den månedlige udgift den udgør.</p>
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y divide-border">

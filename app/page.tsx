@@ -407,7 +407,7 @@ export default function HomePage() {
               { value: "51", label: "racer i databasen", sub: "hunde og katte" },
               { value: "115+", label: "sammenligningspar", sub: "alle kombinationer" },
             ].map((stat) => (
-              <div key={stat.label} className="flex flex-col">
+              <div key={stat.sub} className="flex flex-col">
                 <p className="text-3xl font-bold text-navy-900 mb-0.5">{stat.value}</p>
                 <p className="text-xs font-medium text-foreground">{stat.label}</p>
                 <p className="text-xs text-muted-foreground mt-1">{stat.sub}</p>

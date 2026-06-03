@@ -9,7 +9,8 @@ export function calculatePetCost(
   breed: Breed,
   inputs: CalculatorInputs
 ): PetCostResult {
-  const { budgetLevel, activityLevel, hasInsurance, groomingLevel } = inputs;
+  const { budgetLevel, activityLevel, hasInsurance, groomingLevel, ageYears, housingType } =
+    inputs;
 
   const food = breed.monthlyFoodCost[budgetLevel];
 
@@ -17,9 +18,18 @@ export function calculatePetCost(
     activityLevel === "high" ? 1.15 : activityLevel === "low" ? 0.9 : 1.0;
   const adjustedFood = Math.round(food * activityMultiplier);
 
-  const insurance = hasInsurance ? breed.monthlyInsurance[budgetLevel] : 0;
+  // Alder påvirker dyrlæge og forsikring: hvalpe/killinger har flere besøg,
+  // og ældre dyr koster markant mere at behandle og forsikre.
+  const ageVetMultiplier =
+    ageYears === 0 ? 1.4 : ageYears >= 10 ? 1.5 : ageYears >= 7 ? 1.25 : 1.0;
+  const ageInsuranceMultiplier =
+    ageYears >= 10 ? 1.6 : ageYears >= 7 ? 1.3 : ageYears >= 4 ? 1.05 : 1.0;
 
-  const vet = breed.monthlyVetAvg;
+  const insurance = hasInsurance
+    ? Math.round(breed.monthlyInsurance[budgetLevel] * ageInsuranceMultiplier)
+    : 0;
+
+  const vet = Math.round(breed.monthlyVetAvg * ageVetMultiplier);
 
   const grooming =
     groomingLevel === "home"
@@ -31,7 +41,11 @@ export function calculatePetCost(
   const treats = Math.round(adjustedFood * 0.12);
   const toys = budgetLevel === "budget" ? 50 : budgetLevel === "medium" ? 80 : 130;
   const fleaTick = Math.round(260 / 12);
-  const miscellaneous = budgetLevel === "budget" ? 80 : budgetLevel === "medium" ? 140 : 220;
+  // Bolig uden egen have (lejlighed) → lidt højere udgift til aktivering/luftning.
+  const housingMiscMultiplier = housingType === "apartment" ? 1.15 : 1.0;
+  const miscellaneousBase =
+    budgetLevel === "budget" ? 80 : budgetLevel === "medium" ? 140 : 220;
+  const miscellaneous = Math.round(miscellaneousBase * housingMiscMultiplier);
 
   const equipmentBase =
     budgetLevel === "budget" ? 2500 : budgetLevel === "medium" ? 4500 : 8000;
@@ -55,9 +69,12 @@ export function calculatePetCost(
 
   const avgLifespan = (breed.lifespan.min + breed.lifespan.max) / 2;
 
+  // Hvalpe/killinger har ekstra opstart: vaccinationsprogram, neutralisation, flere dyrlægebesøg.
+  const puppyFirstYearExtra = ageYears === 0 ? 2500 : 0;
   const firstYearExtra =
     breed.oneTimeCosts +
-    (budgetLevel === "budget" ? 1500 : budgetLevel === "medium" ? 2500 : 4000);
+    (budgetLevel === "budget" ? 1500 : budgetLevel === "medium" ? 2500 : 4000) +
+    puppyFirstYearExtra;
   const firstYearCost = yearlyCost + firstYearExtra;
 
   const lifetimeCost = Math.round(yearlyCost * avgLifespan + firstYearExtra);
@@ -112,6 +129,10 @@ function generateSavingsTips(
 
   if (inputs.budgetLevel === "premium") {
     tips.push("Medium-kvalitetsfoder giver samme næringsværdi som premium til halvdelen af prisen.");
+  }
+
+  if (inputs.ageYears >= 7) {
+    tips.push("Ældre dyr har højere dyrlæge- og forsikringsudgifter — tjek at forsikringen stadig dækker aldersrelaterede lidelser.");
   }
 
   if (breed.petType === "dog") {

@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/hvad-koster", label: "Racer" },
   { href: "/sammenlign", label: "Sammenlign" },
   { href: "/guides", label: "Guider" },
+  { href: "/huskeliste", label: "Huskeliste" },
   { href: "/statistik", label: "Statistik" },
   { href: "/produkter", label: "Produkter" },
 ];

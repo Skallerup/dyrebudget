@@ -1,0 +1,443 @@
+export interface ChecklistItem {
+  id: string;
+  name: string;
+  why: string;
+  priceMin: number;
+  priceMax: number;
+  essential: boolean;
+  productId?: string;
+}
+
+export interface ChecklistCategory {
+  id: string;
+  title: string;
+  description: string;
+  items: ChecklistItem[];
+}
+
+export const dogChecklist: ChecklistCategory[] = [
+  {
+    id: "grundudstyr",
+    title: "Grundudstyr",
+    description: "Det basale din hund skal have fra dag ét.",
+    items: [
+      {
+        id: "seng",
+        name: "Hundeseng eller kurv",
+        why: "Et fast, trygt sted at sove og slappe af. Vælg en vaskbar model i rette størrelse.",
+        priceMin: 250,
+        priceMax: 1500,
+        essential: true,
+        productId: "bydoodledog-hundekurv",
+      },
+      {
+        id: "bur",
+        name: "Transportbur / hvalpegård",
+        why: "Hjælper med renlighedstræning og giver et sikkert frirum. Bruges også til transport.",
+        priceMin: 300,
+        priceMax: 1500,
+        essential: true,
+      },
+      {
+        id: "taeppe",
+        name: "Tæppe / vaskbart underlag",
+        why: "Beskytter seng og gulv mod uheld i den første tid — og er nemt at vaske.",
+        priceMin: 100,
+        priceMax: 400,
+        essential: false,
+      },
+    ],
+  },
+  {
+    id: "mad-vand",
+    title: "Mad & vand",
+    description: "Foder og skåle — den daglige forplejning.",
+    items: [
+      {
+        id: "foder",
+        name: "Hundefoder (1. pose)",
+        why: "Start med samme foder som opdrætteren brugte, og skift gradvist hvis du vil noget andet.",
+        priceMin: 250,
+        priceMax: 700,
+        essential: true,
+        productId: "gilpa-first-buddy-adult",
+      },
+      {
+        id: "skaale",
+        name: "Mad- og vandskål",
+        why: "Skridsikre skåle i rustfrit stål eller keramik holder længst og er mest hygiejniske.",
+        priceMin: 100,
+        priceMax: 600,
+        essential: true,
+        productId: "designforpets-skaal",
+      },
+      {
+        id: "opbevaring",
+        name: "Foderbeholder",
+        why: "Holder tørfoderet friskt og væk fra skadedyr. En god investering ved store poser.",
+        priceMin: 100,
+        priceMax: 400,
+        essential: false,
+      },
+    ],
+  },
+  {
+    id: "gaatur",
+    title: "Gåtur & sikkerhed",
+    description: "Alt til turen ud — og sikker transport.",
+    items: [
+      {
+        id: "sele",
+        name: "Sele eller halsbånd",
+        why: "En god sele fordeler trækket bedre end et halsbånd og er skånsom for nakke og luftrør.",
+        priceMin: 150,
+        priceMax: 700,
+        essential: true,
+      },
+      {
+        id: "snor",
+        name: "Hundesnor / line",
+        why: "Lovpligtig i de fleste områder. En 2-3 m line giver god kontrol i byen.",
+        priceMin: 80,
+        priceMax: 400,
+        essential: true,
+      },
+      {
+        id: "idtegn",
+        name: "ID-tegn med navn og telefon",
+        why: "Hunde skal være ID-mærket og registreret — et tegn på selen hjælper hvis den løber væk.",
+        priceMin: 40,
+        priceMax: 150,
+        essential: true,
+      },
+      {
+        id: "bilsele",
+        name: "Bilsele eller bilsæde",
+        why: "Hunden skal være forsvarligt fastspændt under kørsel — både for dens og din sikkerhed.",
+        priceMin: 200,
+        priceMax: 1200,
+        essential: false,
+        productId: "bydoodledog-bilsaede",
+      },
+      {
+        id: "poser",
+        name: "Høm-høm-poser",
+        why: "Du skal altid samle op efter hunden. Køb en stor pakke og en holder til linen.",
+        priceMin: 30,
+        priceMax: 120,
+        essential: true,
+      },
+    ],
+  },
+  {
+    id: "pleje",
+    title: "Pleje & hygiejne",
+    description: "Pels, kløer og tænder — grej til den løbende pleje.",
+    items: [
+      {
+        id: "boerste",
+        name: "Børste / pelsplejesæt",
+        why: "Regelmæssig børstning reducerer fældning og forebygger filt — typen afhænger af pelsen.",
+        priceMin: 75,
+        priceMax: 800,
+        essential: true,
+        productId: "amazinganimals-groompro",
+      },
+      {
+        id: "shampoo",
+        name: "Hundeshampoo",
+        why: "Mild, pH-tilpasset shampoo til hunde — brug aldrig menneske-shampoo.",
+        priceMin: 60,
+        priceMax: 200,
+        essential: false,
+      },
+      {
+        id: "kloklipper",
+        name: "Kloklipper",
+        why: "For lange kløer er ubehagelige og kan give skader. Klip dem hver 3.-4. uge.",
+        priceMin: 50,
+        priceMax: 250,
+        essential: false,
+      },
+      {
+        id: "tandboerste",
+        name: "Tandbørste & tandpasta",
+        why: "Tandpleje forebygger dyre tandbehandlinger senere. Start gerne mens hunden er ung.",
+        priceMin: 50,
+        priceMax: 200,
+        essential: false,
+      },
+    ],
+  },
+  {
+    id: "sundhed",
+    title: "Sundhed & forebyggelse",
+    description: "Forsikring og forebyggelse — det der sikrer økonomien.",
+    items: [
+      {
+        id: "forsikring",
+        name: "Hundeforsikring",
+        why: "En enkelt operation kan koste 20.000+ kr. Forsikring fra dag ét er den billigste tryghed.",
+        priceMin: 150,
+        priceMax: 400,
+        essential: true,
+        productId: "agria-hund-basis",
+      },
+      {
+        id: "loppeflaat",
+        name: "Loppe- & flåtbeskyttelse",
+        why: "Forebyggelse er nemmere end behandling. Vælg mellem halsbånd, spot-on eller tabletter.",
+        priceMin: 65,
+        priceMax: 300,
+        essential: true,
+        productId: "loppetjansen-tic-clip",
+      },
+      {
+        id: "flaatfjerner",
+        name: "Flåtfjerner",
+        why: "Et must i flåtsæsonen — fjerner flåten helt uden at klemme den.",
+        priceMin: 20,
+        priceMax: 60,
+        essential: false,
+        productId: "loppetjansen-tick-twister",
+      },
+      {
+        id: "dyrlaege",
+        name: "Sundhedstjek hos dyrlægen",
+        why: "Book et tjek kort efter hjemkomst — vacciner, ormekur og chip kontrolleres.",
+        priceMin: 400,
+        priceMax: 800,
+        essential: true,
+      },
+      {
+        id: "kosttilskud",
+        name: "Probiotika / kosttilskud",
+        why: "Støtter fordøjelsen i den stressende flyttefase — især nyttigt for hvalpe.",
+        priceMin: 150,
+        priceMax: 300,
+        essential: false,
+        productId: "buddyschoice-probiotika",
+      },
+    ],
+  },
+  {
+    id: "leg-traening",
+    title: "Leg & træning",
+    description: "Aktivering og belønning — vigtigt for en glad og lydig hund.",
+    items: [
+      {
+        id: "legetoj",
+        name: "Legetøj (startsæt)",
+        why: "Tyggelegetøj og aktivering forebygger kedsomhed og ødelagte møbler.",
+        priceMin: 100,
+        priceMax: 500,
+        essential: true,
+        productId: "designforpets-legetoj",
+      },
+      {
+        id: "godbidder",
+        name: "Træningsgodbidder",
+        why: "Små, bløde godbidder er guld værd i den tidlige træning. Vælg naturlige varianter.",
+        priceMin: 40,
+        priceMax: 150,
+        essential: true,
+        productId: "pawfix-andestrimler",
+      },
+      {
+        id: "klikker",
+        name: "Klikker til træning",
+        why: "Billigt og effektivt redskab til positiv træning af hvalpe.",
+        priceMin: 20,
+        priceMax: 60,
+        essential: false,
+      },
+    ],
+  },
+];
+
+export const catChecklist: ChecklistCategory[] = [
+  {
+    id: "grundudstyr",
+    title: "Grundudstyr",
+    description: "Det basale din kat skal have klar fra start.",
+    items: [
+      {
+        id: "kattebakke",
+        name: "Kattebakke",
+        why: "Tommelfingerregel: én bakke pr. kat plus én ekstra. Lukket eller åben efter kattens præference.",
+        priceMin: 100,
+        priceMax: 600,
+        essential: true,
+      },
+      {
+        id: "kattegrus",
+        name: "Kattegrus",
+        why: "Klumpende grus er nemmest at holde rent. Hold dig til samme type som katten kender i starten.",
+        priceMin: 50,
+        priceMax: 200,
+        essential: true,
+      },
+      {
+        id: "seng",
+        name: "Kattekurv eller -seng",
+        why: "Et lunt, tilbagetrukket sted at sove. Mange katte elsker også en hule eller en plads i højden.",
+        priceMin: 150,
+        priceMax: 700,
+        essential: false,
+      },
+    ],
+  },
+  {
+    id: "mad-vand",
+    title: "Mad & vand",
+    description: "Foder og skåle til den daglige forplejning.",
+    items: [
+      {
+        id: "foder",
+        name: "Kattefoder (1. pose)",
+        why: "Start med det foder katten kender, og skift gradvist. Vådfoder bidrager til væskeindtag.",
+        priceMin: 150,
+        priceMax: 500,
+        essential: true,
+        productId: "activepet-acana-kat",
+      },
+      {
+        id: "skaale",
+        name: "Mad- og vandskål",
+        why: "Flade, brede skåle er mest behagelige for katte. Mange foretrækker rindende vand fra et vandfontæne.",
+        priceMin: 80,
+        priceMax: 500,
+        essential: true,
+        productId: "designforpets-skaal",
+      },
+    ],
+  },
+  {
+    id: "klo-klatre",
+    title: "Kradse & klatre",
+    description: "Vigtigt for trivsel — og for at skåne dine møbler.",
+    items: [
+      {
+        id: "kradsetrae",
+        name: "Kradsetræ / kradsebræt",
+        why: "Katte SKAL kradse for at vedligeholde kløerne. Et godt kradsetræ redder sofaen.",
+        priceMin: 150,
+        priceMax: 1500,
+        essential: true,
+      },
+      {
+        id: "klatre",
+        name: "Klatre- eller hyldeplads",
+        why: "Katte elsker højder og overblik. En kattestige eller hylde giver vigtig stimulation, især for indekatte.",
+        priceMin: 200,
+        priceMax: 900,
+        essential: false,
+        productId: "designforpets-kattestige",
+      },
+    ],
+  },
+  {
+    id: "transport-sikkerhed",
+    title: "Transport & sikkerhed",
+    description: "Til dyrlægebesøg og en tryg hverdag.",
+    items: [
+      {
+        id: "transportbur",
+        name: "Transportbur",
+        why: "Nødvendigt til dyrlægen og transport. Et bur der åbner foroven gør håndteringen langt nemmere.",
+        priceMin: 150,
+        priceMax: 600,
+        essential: true,
+      },
+      {
+        id: "idmaerkning",
+        name: "ID-mærkning (chip)",
+        why: "Katte bør chippes og registreres — det er ofte eneste vej tilbage hvis en udekat forsvinder.",
+        priceMin: 200,
+        priceMax: 400,
+        essential: true,
+      },
+    ],
+  },
+  {
+    id: "pleje",
+    title: "Pleje & hygiejne",
+    description: "Pels, kløer og daglig pleje.",
+    items: [
+      {
+        id: "boerste",
+        name: "Børste / pelshandske",
+        why: "Især langhårede racer skal børstes ofte for at undgå filt og hårboller.",
+        priceMin: 60,
+        priceMax: 400,
+        essential: true,
+        productId: "amazinganimals-furbegone",
+      },
+      {
+        id: "kloklipper",
+        name: "Kloklipper",
+        why: "Indekatte slider ikke kløerne nok selv — klip spidserne hver par uger.",
+        priceMin: 50,
+        priceMax: 200,
+        essential: false,
+      },
+    ],
+  },
+  {
+    id: "sundhed",
+    title: "Sundhed & forebyggelse",
+    description: "Forsikring og forebyggelse der sikrer økonomien.",
+    items: [
+      {
+        id: "forsikring",
+        name: "Katteforsikring",
+        why: "Dyrlægeregninger kan løbe op i tusindvis af kroner. Forsikring fra ung alder er billigst.",
+        priceMin: 100,
+        priceMax: 250,
+        essential: true,
+        productId: "agria-kat",
+      },
+      {
+        id: "loppeflaat",
+        name: "Loppe- & flåtbeskyttelse",
+        why: "Især udekatte har brug for forebyggelse. Vælg et produkt der passer til kattens vægt.",
+        priceMin: 65,
+        priceMax: 250,
+        essential: true,
+        productId: "loppetjansen-spot-on",
+      },
+      {
+        id: "dyrlaege",
+        name: "Sundhedstjek hos dyrlægen",
+        why: "Book et tjek kort efter hjemkomst — vacciner, ormekur og evt. neutralisation planlægges.",
+        priceMin: 400,
+        priceMax: 900,
+        essential: true,
+      },
+    ],
+  },
+  {
+    id: "leg",
+    title: "Leg & aktivering",
+    description: "Holder katten sund, glad og fri for kedsomhed.",
+    items: [
+      {
+        id: "legetoj",
+        name: "Legetøj (startsæt)",
+        why: "Fjerpinde, bolde og knitrelegetøj stimulerer jagtinstinktet — vigtigt for indekatte.",
+        priceMin: 50,
+        priceMax: 300,
+        essential: true,
+        productId: "designforpets-legetoj",
+      },
+      {
+        id: "godbidder",
+        name: "Kattegodbidder",
+        why: "Til belønning og kontakt. Brug dem med måde — de fylder hurtigt på en lille kat.",
+        priceMin: 30,
+        priceMax: 120,
+        essential: false,
+      },
+    ],
+  },
+];

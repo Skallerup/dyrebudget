@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ListChecks } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Guider — Alt om kæledyrsøkonomi",
@@ -11,6 +11,20 @@ export const metadata: Metadata = {
 };
 
 const guides = [
+  {
+    slug: "julegaver-til-hund",
+    title: "Julegaver til hund 2026",
+    desc: "De bedste gaveidéer til hunden i alle prisklasser — hundekurve, legetøj, godbidder og udstyr.",
+    readTime: "4 min",
+    category: "Gaver",
+  },
+  {
+    slug: "julegaver-til-kat",
+    title: "Julegaver til kat 2026",
+    desc: "De bedste gaveidéer til katten i alle prisklasser — kradsemøbler, jagtlegetøj og godbidder.",
+    readTime: "4 min",
+    category: "Gaver",
+  },
   {
     slug: "hvad-koster-en-hund",
     title: "Hvad koster en hund i Danmark?",
@@ -189,6 +203,23 @@ export default function GuidesPage() {
       <p className="text-muted-foreground mb-10">
         Datadrevne guider der hjælper dig med at forstå de reelle udgifter ved at holde kæledyr i Danmark.
       </p>
+
+      <Link
+        href="/huskeliste"
+        className="group flex items-center gap-4 p-5 mb-8 bg-navy-900 text-white rounded-xl hover:bg-navy-800 transition-colors"
+      >
+        <div className="w-11 h-11 rounded-xl bg-mint-500/20 flex items-center justify-center shrink-0">
+          <ListChecks className="w-5 h-5 text-mint-400" />
+        </div>
+        <div className="flex-1">
+          <h2 className="font-semibold mb-0.5">Interaktiv huskeliste til ny hund</h2>
+          <p className="text-sm text-navy-300">
+            Kryds af mens du handler og se prisestimat for hver ting og det samlede startbudget.
+          </p>
+        </div>
+        <ArrowRight className="w-4 h-4 text-mint-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+      </Link>
+
       <div className="space-y-4">
         {guides.map((guide) => (
           <Link

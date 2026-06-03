@@ -240,19 +240,43 @@ export default async function BreedPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Guide link — only for breeds with dedicated guide */}
-        {breedGuideUrl && (
-          <Link
-            href={breedGuideUrl}
-            className="mt-4 flex items-center justify-between p-4 bg-navy-50 border border-navy-200 rounded-xl hover:border-navy-400 hover:shadow-sm transition-all group"
-          >
-            <div>
-              <p className="text-sm font-semibold text-navy-900">Læs vores komplette {breed.name}-guide</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Sundhedsrisici, forsikringstips og hvad du skal vide inden køb</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-navy-600 group-hover:text-navy-900 shrink-0 transition-colors" />
-          </Link>
-        )}
+        {/* Guide link — dedicated hand-written guide, ellers programmatisk køberguide */}
+        <Link
+          href={breedGuideUrl ?? `/guides/${breed.slug}`}
+          className="mt-4 flex items-center justify-between p-4 bg-navy-50 border border-navy-200 rounded-xl hover:border-navy-400 hover:shadow-sm transition-all group"
+        >
+          <div>
+            <p className="text-sm font-semibold text-navy-900">
+              {breedGuideUrl
+                ? `Læs vores komplette ${breed.name}-guide`
+                : `Er en ${breed.name} noget for dig?`}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {breedGuideUrl
+                ? "Sundhedsrisici, forsikringstips og hvad du skal vide inden køb"
+                : "Fordele, ulemper, sundhed og pasningsbehov — køberguide inden du beslutter"}
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-navy-600 group-hover:text-navy-900 shrink-0 transition-colors" />
+        </Link>
+
+        {/* Insurance funnel — high-intent CTA */}
+        <Link
+          href={breed.petType === "dog" ? "/find-billigste-hundeforsikring" : "/find-billigste-katteforsikring"}
+          className="mt-4 flex items-center justify-between p-4 bg-mint-50 border border-mint-200 rounded-xl hover:border-mint-400 hover:shadow-sm transition-all group"
+        >
+          <div>
+            <p className="text-sm font-semibold text-navy-900">
+              Find billigste {breed.petType === "dog" ? "hunde" : "katte"}forsikring til din {breed.name}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {breed.healthRisk === "high"
+                ? "Denne race har høj sundhedsrisiko — forsikring anbefales kraftigt."
+                : "Sammenlign pris og dækning på tværs af selskaber."}
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-mint-600 group-hover:text-mint-700 shrink-0 transition-colors" />
+        </Link>
 
         {/* Email capture */}
         <div className="mt-8">

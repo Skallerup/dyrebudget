@@ -54,6 +54,9 @@ export function MultiStepCalculator() {
     const budgetParam = params.get("budget") as BudgetLevel | null;
     const insuranceParam = params.get("insurance");
     const groomingParam = params.get("grooming");
+    const ageParam = params.get("age");
+    const housingParam = params.get("housing");
+    const activityParam = params.get("activity");
 
     if (!breedParam) return;
     const breed = breeds.find((b) => b.id === breedParam);
@@ -67,6 +70,13 @@ export function MultiStepCalculator() {
       ...(insuranceParam !== null && { hasInsurance: insuranceParam !== "false" }),
       ...(groomingParam && ["home", "mixed", "professional"].includes(groomingParam) && {
         groomingLevel: groomingParam as CalculatorInputs["groomingLevel"],
+      }),
+      ...(ageParam !== null && !Number.isNaN(Number(ageParam)) && { ageYears: Number(ageParam) }),
+      ...(housingParam && ["apartment", "house"].includes(housingParam) && {
+        housingType: housingParam as CalculatorInputs["housingType"],
+      }),
+      ...(activityParam && ["low", "medium", "high"].includes(activityParam) && {
+        activityLevel: activityParam as ActivityLevel,
       }),
     };
 
@@ -97,6 +107,9 @@ export function MultiStepCalculator() {
         url.searchParams.set("budget", inputs.budgetLevel);
         url.searchParams.set("insurance", String(inputs.hasInsurance));
         url.searchParams.set("grooming", inputs.groomingLevel);
+        url.searchParams.set("age", String(inputs.ageYears));
+        url.searchParams.set("housing", inputs.housingType);
+        url.searchParams.set("activity", inputs.activityLevel);
         window.history.replaceState({}, "", url.toString());
         trackEvent("calculator_completed", {
           breedId: breed.id,
@@ -182,7 +195,12 @@ export function MultiStepCalculator() {
         <div className="space-y-4">
           <div>
             <h2 className="text-2xl font-bold mb-1">Vælg race</h2>
-            <p className="text-muted-foreground text-sm">Klik på din race for at vælge den.</p>
+            <p className="text-muted-foreground text-sm">
+              Klik på din race for at vælge den. Farvemærket viser racens relative pris:{" "}
+              <span className="font-medium text-green-700">grøn = billig</span>,{" "}
+              <span className="font-medium text-amber-700">gul = medium</span>,{" "}
+              <span className="font-medium text-red-700">rød = dyr</span>.
+            </p>
           </div>
 
           {/* Search */}
@@ -289,11 +307,19 @@ export function MultiStepCalculator() {
       {/* Step 2: Profile */}
       {step === 2 && (
         <div className="space-y-5">
-          <h2 className="text-2xl font-bold">Kæledyrets profil</h2>
+          <div>
+            <h2 className="text-2xl font-bold">Kæledyrets profil</h2>
+            <p className="text-muted-foreground text-sm mt-1">
+              Et par detaljer om dit dyr, så beregningen passer bedre til netop din hverdag.
+            </p>
+          </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Alder</label>
-            <div className="flex gap-2 flex-wrap">
+            <p className="text-xs text-muted-foreground">
+              Hvalpe/killinger har ekstra opstartsudgifter, og ældre dyr koster mere i dyrlæge og forsikring.
+            </p>
+            <div className="flex gap-2 flex-wrap pt-1">
               {[0, 1, 2, 4, 7, 10].map((age) => (
                 <button
                   key={age}
@@ -310,9 +336,12 @@ export function MultiStepCalculator() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Aktivitetsniveau</label>
-            <div className="flex gap-2">
+            <p className="text-xs text-muted-foreground">
+              Mere aktive dyr spiser mere — det øger foderudgiften i beregningen.
+            </p>
+            <div className="flex gap-2 pt-1">
               {(["low", "medium", "high"] as ActivityLevel[]).map((level) => (
                 <button
                   key={level}
@@ -329,9 +358,12 @@ export function MultiStepCalculator() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Boligtype</label>
-            <div className="flex gap-2">
+            <p className="text-xs text-muted-foreground">
+              Bor I i lejlighed uden egen have, regner vi lidt mere til aktivering og luftning.
+            </p>
+            <div className="flex gap-2 pt-1">
               {(["apartment", "house"] as const).map((type) => (
                 <button
                   key={type}
@@ -353,11 +385,19 @@ export function MultiStepCalculator() {
       {/* Step 3: Budget */}
       {step === 3 && (
         <div className="space-y-5">
-          <h2 className="text-2xl font-bold">Budget og præferencer</h2>
+          <div>
+            <h2 className="text-2xl font-bold">Budget og præferencer</h2>
+            <p className="text-muted-foreground text-sm mt-1">
+              Disse valg påvirker direkte den pris du får vist.
+            </p>
+          </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Budgetniveau</label>
-            <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">
+              Bestemmer kvaliteten — og dermed prisen — på foder og forsikring.
+            </p>
+            <div className="space-y-2 pt-1">
               {(
                 [
                   { id: "budget", label: "Budget", desc: "Basiskvalitet, fokus på pris" },
@@ -386,9 +426,12 @@ export function MultiStepCalculator() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Forsikring</label>
-            <div className="flex gap-2">
+            <p className="text-xs text-muted-foreground">
+              Vælg om den månedlige forsikringspræmie skal regnes med i prisen.
+            </p>
+            <div className="flex gap-2 pt-1">
               {[true, false].map((val) => (
                 <button
                   key={String(val)}
@@ -405,9 +448,12 @@ export function MultiStepCalculator() {
             </div>
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-medium">Grooming</label>
-            <div className="flex gap-2">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Pelspleje</label>
+            <p className="text-xs text-muted-foreground">
+              Passer du selv pelsen derhjemme, eller bruger du en professionel groomer? Påvirker den månedlige plejeudgift.
+            </p>
+            <div className="flex gap-2 pt-1">
               {(["home", "mixed", "professional"] as const).map((level) => (
                 <button
                   key={level}
@@ -418,7 +464,7 @@ export function MultiStepCalculator() {
                       : "border-border hover:border-navy-300"
                   }`}
                 >
-                  {level === "home" ? "Hjemme" : level === "mixed" ? "Blandet" : "Professionel"}
+                  {level === "home" ? "Selv hjemme" : level === "mixed" ? "Blandet" : "Professionel"}
                 </button>
               ))}
             </div>
@@ -435,6 +481,8 @@ export function MultiStepCalculator() {
               <p className="text-muted-foreground text-sm">
                 {inputs.budgetLevel === "budget" ? "Budget" : inputs.budgetLevel === "medium" ? "Medium" : "Premium"}
                 {inputs.hasInsurance ? " · med forsikring" : " · uden forsikring"}
+                {" · "}
+                {inputs.ageYears === 0 ? "hvalp/killing" : `${inputs.ageYears} år`}
               </p>
             </div>
             <div className="flex items-center gap-2">

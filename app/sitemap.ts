@@ -28,6 +28,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/hvad-koster`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/sammenlign`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/produkter`, priority: 0.7, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/huskeliste`, priority: 0.8, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/huskeliste/kat`, priority: 0.8, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/find-billigste-hundeforsikring`, priority: 0.9, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/find-billigste-katteforsikring`, priority: 0.9, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/statistik`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/quiz`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides`, priority: 0.7, changeFrequency: "monthly" as const },
@@ -55,6 +59,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/guides/hvad-koster-en-berner-sennenhund`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/hvad-koster-en-cavapoo`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/guides/hvad-koster-en-cocker-spaniel`, priority: 0.8, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/guides/julegaver-til-hund`, priority: 0.7, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/guides/julegaver-til-kat`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/om`, priority: 0.4, changeFrequency: "yearly" as const },
     { url: `${SITE_URL}/metode`, priority: 0.5, changeFrequency: "yearly" as const },
     { url: `${SITE_URL}/affiliate`, priority: 0.4, changeFrequency: "yearly" as const },
@@ -67,6 +73,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  // #3 — Programmatic buyer's guides ("Er en X noget for dig?") for every breed
+  const breedGuidePages = breeds.map((breed) => ({
+    url: `${SITE_URL}/guides/${breed.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
   // #4 — All programmatically generated comparison pairs (was only 14 before)
@@ -92,6 +106,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: p.priority,
     })),
     ...breedPages,
+    ...breedGuidePages,
     ...allComparisons,
     ...productPages,
   ];
