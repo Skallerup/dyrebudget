@@ -3,6 +3,7 @@ import Link from "next/link";
 import { HeroCalculator } from "@/components/calculator/HeroCalculator";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { FAQSection } from "@/components/shared/FAQSection";
+import { SectionDivider } from "@/components/shared/SectionDivider";
 import { getCheapestBreeds, getMostExpensiveBreeds } from "@/data/breeds";
 import {
   ArrowRight,
@@ -354,6 +355,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <SectionDivider />
+
       {/* ── DYRESTE HUNDERACER ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
         <div className="flex items-end justify-between mb-7">
@@ -377,6 +380,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <SectionDivider />
 
       {/* ── BILLIGSTE KATTERACER ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
