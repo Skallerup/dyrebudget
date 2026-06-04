@@ -4,27 +4,27 @@
 
 @layer base {
   :root {
-    /* Slightly warmer, more premium background */
-    --background: 220 18% 97.5%;
-    --foreground: 222 47% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 10%;
-    --primary: 221 83% 20%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 35 30% 88%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 215 38% 94%;
-    --muted-foreground: 215 16% 45%;
-    --accent: 168 84% 40%;
+    /* Adoption Pets-inspireret: varm creme-baggrund + næsten-sort tekst */
+    --background: 44 50% 95%;
+    --foreground: 30 6% 9%;
+    --card: 44 60% 99%;
+    --card-foreground: 30 6% 9%;
+    --popover: 44 60% 99%;
+    --popover-foreground: 30 6% 9%;
+    --primary: 30 6% 11%;
+    --primary-foreground: 44 60% 98%;
+    --secondary: 38 42% 90%;
+    --secondary-foreground: 30 6% 11%;
+    --muted: 40 30% 91%;
+    --muted-foreground: 32 8% 40%;
+    --accent: 33 91% 54%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 30% 89%;
-    --input: 214 30% 89%;
-    --ring: 221 83% 20%;
-    --radius: 0.75rem;
+    --destructive: 4 84% 57%;
+    --destructive-foreground: 44 60% 98%;
+    --border: 38 26% 85%;
+    --input: 38 26% 85%;
+    --ring: 33 88% 50%;
+    --radius: 1rem;
   }
 }
 
@@ -37,7 +37,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-display font-semibold;
   }
   /* Smooth anchor scrolling */
   html {
@@ -51,6 +51,17 @@
   }
   .text-pretty {
     text-wrap: pretty;
+  }
+  /* Coral → orange gradient tekst (hero-overskrifter, Adoption Pets-stil) */
+  .text-gradient-warm {
+    background-image: linear-gradient(100deg, #ef4e45 0%, #f5921e 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Subtil pote-doodle baggrund til dekorative sektioner */
+  .bg-paws {
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231a1817' fill-opacity='0.04'%3E%3Cellipse cx='40' cy='46' rx='9' ry='7'/%3E%3Cellipse cx='28' cy='34' rx='3.5' ry='4.5'/%3E%3Cellipse cx='38' cy='30' rx='3.5' ry='4.5'/%3E%3Cellipse cx='48' cy='30' rx='3.5' ry='4.5'/%3E%3Cellipse cx='56' cy='36' rx='3.5' ry='4.5'/%3E%3C/g%3E%3C/svg%3E");
   }
   /* Premium shadow scale */
   .shadow-card {

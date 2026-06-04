@@ -56,7 +56,7 @@ const homeFaqs = [
 ];
 
 const costCategories = [
-  { icon: Package, label: "Foder", pct: 34, color: "bg-navy-600", desc: "Tørfoder, vådfoder, godbidder" },
+  { icon: Package, label: "Foder", pct: 34, color: "bg-coral-500", desc: "Tørfoder, vådfoder, godbidder" },
   { icon: Shield, label: "Forsikring", pct: 24, color: "bg-mint-600", desc: "Sundhed, ansvar, liv" },
   { icon: Stethoscope, label: "Dyrlæge", pct: 17, color: "bg-blue-500", desc: "Forebyggelse + akut behandling" },
   { icon: Scissors, label: "Grooming", pct: 12, color: "bg-purple-500", desc: "Pelspleje, bade, klipning" },
@@ -106,10 +106,10 @@ export default function HomePage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-mint-400 animate-pulse" />
                 51 racer · Danske priser · Gratis
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold leading-[1.15] mb-5 text-balance">
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] mb-5 text-balance">
                 Hvad koster et
                 <br />
-                <span className="text-mint-400">kæledyr egentlig?</span>
+                <span className="text-gradient-warm">kæledyr egentlig?</span>
               </h1>
               <p className="text-navy-300 text-lg leading-relaxed mb-8 max-w-lg text-pretty">
                 Beregn realistiske månedlige og livslange udgifter til hund og kat i Danmark.

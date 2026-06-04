@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Fredoka } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -9,6 +9,14 @@ import { PostHogProvider } from "@/components/PostHogProvider";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+// Rund, venlig display-font til overskrifter (Adoption Pets-stil)
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -59,7 +67,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="da" className={inter.variable}>
+    <html lang="da" className={`${inter.variable} ${fredoka.variable}`}>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-3VR0T0HGHY"
