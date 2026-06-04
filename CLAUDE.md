@@ -149,7 +149,7 @@ npm run dev
 ```bash
 npm run typecheck  # TypeScript tjek (0 fejl ved MVP)
 npm run lint       # ESLint
-npm run build      # Production build (52 sider)
+npm run build      # Production build (431 sider)
 ```
 
 GitHub Actions CI kører automatisk lint + typecheck + build ved push.
@@ -167,25 +167,40 @@ Se `DEPLOYMENT.md` for Vercel + Supabase + domain setup.
 
 Track affiliate-klik med: `trackEvent("affiliate_click", { productId, productName, affiliatePartner })`
 
-## Status (maj 2026)
+## Status (juni 2026)
 
 - **LIVE på https://dyrebudget.dk** (Vercel, auto-deploy ved push til `master`)
-- Bygger rent: 245 sider · TypeScript 0 fejl · ESLint 0 advarsler
+- Bygger rent: **431 sider** · TypeScript 0 fejl · ESLint 0 advarsler
 - 53 racer (38 hunde + 15 katte)
 - Supabase live på `rgztxwmqsfximovfrtmz` — tabeller inkl. `cost_submissions` (crowdsourcede priser)
 
-### Bygget i denne fase
-- **Race-billeder**: lokalt hostet i `/public/breeds/{slug}.jpg` (hentet fra Dog CEO API + TheCatAPI, race-kategoriseret). `BreedImage`-komponent viser emoji-fallback hvis fil mangler. Læg nye billeder direkte i mappen — ingen kodeændring.
-- **Favicon**: `app/icon.svg` (pote, navy/mint) + `app/apple-icon.tsx` (PNG via next/og)
+### Bygget i tidligere faser
+- **Race-billeder**: lokalt hostet i `/public/breeds/{slug}.jpg` (Dog CEO API + TheCatAPI). `BreedImage`-komponent viser emoji-fallback hvis fil mangler. Læg nye billeder direkte i mappen — ingen kodeændring.
+- **Favicon**: `app/icon.svg` + `app/apple-icon.tsx`
 - **Race-søgning**: `BreedCombobox` på forside + sammenligning; søgefelt i beregner-grid
-- **Datavold (#4)**: `RealCostWidget` på race-sider ("Hvad betaler rigtige ejere?") → `/api/cost-submissions` (service-role, zod-valideret, rå data privat). `MethodologyBox` med klikbare kilder + "sidst opdateret"-dato.
+- **Datavold**: `RealCostWidget` → `/api/cost-submissions` (service-role, zod-valideret, rå data privat). `MethodologyBox` med klikbare kilder.
 - **Resend** tilkoblet (transaktionsmail via `/api/send-calculation`)
+- **Forsikrings-monetisering**: `/find-billigste-hundeforsikring` + `/find-billigste-katteforsikring` (`InsuranceComparison`, `BestInTestBox`)
+- **Huskeliste**: `/huskeliste` (hund) + `/huskeliste/kat` (interaktiv `ChecklistTool`, data i `data/checklist.ts`)
+- **Programmatiske køberguides**: `/guides/[slug]` ("Er en X noget for dig?") for alle racer
+- **Beregner**: alder + boligtype påvirker nu prisen (`lib/calculator.ts`)
+
+### Bygget i SEO-trafik-fasen (juni 2026, commit 6dc4da5)
+Mål: organisk trafik. Se også `PR-KIT.md` (pressemateriale med rigtige tal).
+- **Crawl-budget (#2)**: `lib/comparisons.ts` — kun kuraterede sammenligningspar indekseres; halen er `noindex,follow` og ude af sitemap. Hver sammenligning har unikt prosa-afsnit.
+- **Hub-and-spoke linking (#3)**: omkostningssiden linker samlet til køberguide + foder + forsikring.
+- **Dyrlæge-prisdatabase (#4)**: `data/treatments.ts` + `/dyrlaege-priser` + `/dyrlaege-priser/[slug]` (Service/AggregateOffer-schema). Tilføj nye behandlinger i `data/treatments.ts`.
+- **Intent-sider (#5)**: `/forsikring/[slug]` + `/foder/[slug]` for alle racer (genereres fra `breeds.ts`).
+- **Listicles (#6)**: `data/collections.ts` + `/lister/[slug]`. Tilføj nye lister i `data/collections.ts` (kuraterede slug-lister).
+- **Sitemap-freshness (#7)**: `CONTENT_UPDATED`-konstant i `app/sitemap.ts` — bump manuelt ved reelle indholdsændringer (ikke `now`).
+- **Statistik link-magnet (#8)**: `/statistik` = "DyreBudget-indekset" med beregnede citérbare tal + Dataset-schema.
+- **Delbare resultater (#9)**: `/resultat/[config]` + dynamisk OG-billede; `encode/decodeShareConfig` i `lib/shareConfig.ts`; "Del dit resultat"-knap i `CostResultCard` (via `shareConfig`-prop).
 
 ### Næste skridt (prioriteret "owner roadmap")
-1. **SEO/indeksering** — siden er live men IKKE indekseret i Google endnu. Opsæt Google Search Console (verifikation via env `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`), indsend sitemap, anmod om indeksering. Derefter programmatisk long-tail SEO. **Højeste prioritet — hele forretningen afhænger af organisk trafik.**
-2. **Forsikrings-monetisering** — byg rigtig "find billigste hundeforsikring"-sammenligning (Agria/Tryg/If/Dyrekassen); funnel beregnerens "første år"-chok herind. Højeste CPL.
-3. **Email-gated budgetrapport** — gate fuld livstidsberegning bag email (Resend-drip allerede klar)
-4. ✅ Datavold (crowdsourcede priser) — DONE
+1. **SEO/indeksering — HØJESTE PRIORITET, kun ejer kan gøre det.** Siden er live men IKKE indekseret i Google endnu. Opsæt Google Search Console (verifikation via env `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`), indsend sitemap, anmod om indeksering på nøglesider. Tilføj Bing Webmaster Tools. **Dette er gaten — alt det byggede indhold giver først trafik når det er gjort.**
+2. **Backlinks/PR** — brug `PR-KIT.md` (pressemeddelelse, top-5-lister, outreach-mails). 5-10 danske links flytter mest for nyt domæne.
+3. **Email-gated budgetrapport** — gate fuld livstidsberegning bag email (Resend-drip klar)
+4. ✅ Forsikrings-monetisering — DONE · ✅ Datavold — DONE · ✅ Dyrlægepriser/intent-sider/listicles — DONE
 
 ### Vercel env-variable der SKAL være sat (produktion)
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (kræves af cost-submissions + email-leads), `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, evt. `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_POSTHOG_KEY`
