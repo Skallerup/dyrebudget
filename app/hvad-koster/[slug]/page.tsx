@@ -12,7 +12,9 @@ import { EmailCapture } from "@/components/shared/EmailCapture";
 import { MethodologyBox } from "@/components/shared/MethodologyBox";
 import { RealCostWidget } from "@/components/shared/RealCostWidget";
 import { RaceCard } from "@/components/shared/RaceCard";
+import { RelatedLinks } from "@/components/shared/RelatedLinks";
 import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
+import { encodeShareConfig } from "@/lib/shareConfig";
 import { BreedImage } from "@/components/shared/BreedImage";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -186,7 +188,7 @@ export default async function BreedPage({ params }: Props) {
         </p>
 
         {/* Main result */}
-        <CostResultCard result={result} breed={breed} />
+        <CostResultCard result={result} breed={breed} shareConfig={encodeShareConfig(defaultInputs)} />
 
         {/* Crowdsourced real costs — community data moat */}
         <RealCostWidget
@@ -240,25 +242,36 @@ export default async function BreedPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Guide link — dedicated hand-written guide, ellers programmatisk køberguide */}
-        <Link
-          href={breedGuideUrl ?? `/guides/${breed.slug}`}
-          className="mt-4 flex items-center justify-between p-4 bg-navy-50 border border-navy-200 rounded-xl hover:border-navy-400 hover:shadow-sm transition-all group"
-        >
-          <div>
-            <p className="text-sm font-semibold text-navy-900">
-              {breedGuideUrl
-                ? `Læs vores komplette ${breed.name}-guide`
-                : `Er en ${breed.name} noget for dig?`}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {breedGuideUrl
-                ? "Sundhedsrisici, forsikringstips og hvad du skal vide inden køb"
-                : "Fordele, ulemper, sundhed og pasningsbehov — køberguide inden du beslutter"}
-            </p>
-          </div>
-          <ArrowRight className="w-4 h-4 text-navy-600 group-hover:text-navy-900 shrink-0 transition-colors" />
-        </Link>
+        {/* Mere om racen — hub-and-spoke til køberguide, foder og forsikring */}
+        <div className="mt-8">
+          <RelatedLinks
+            title={`Mere om ${breed.name}`}
+            links={[
+              {
+                href: `/guides/${breed.slug}`,
+                title: `Er en ${breed.name} noget for dig?`,
+                desc: "Fordele, ulemper, sundhed og pasningsbehov — køberguide",
+              },
+              {
+                href: `/foder/${breed.slug}`,
+                title: `Foder til ${breed.name}`,
+                desc: "Pris, fodermængde og anbefalinger",
+              },
+              {
+                href: `/forsikring/${breed.slug}`,
+                title: `Forsikring til ${breed.name}`,
+                desc: "Hvad koster forsikring — og hvorfor",
+              },
+              ...(breedGuideUrl
+                ? [{
+                    href: breedGuideUrl,
+                    title: `Komplet ${breed.name}-guide`,
+                    desc: "Dybdegående gennemgang inden køb",
+                  }]
+                : []),
+            ]}
+          />
+        </div>
 
         {/* Insurance funnel — high-intent CTA */}
         <Link

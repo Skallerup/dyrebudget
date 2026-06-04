@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { breeds, getBreedsByPetType } from "@/data/breeds";
 import { BreedImage } from "@/components/shared/BreedImage";
 import { calculatePetCost } from "@/lib/calculator";
+import { encodeShareConfig } from "@/lib/shareConfig";
 import { trackEvent } from "@/lib/analytics";
 import type { CalculatorInputs, PetType, BudgetLevel, ActivityLevel } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -503,7 +504,11 @@ export function MultiStepCalculator() {
             </div>
           </div>
 
-          <CostResultCard result={result} breed={selectedBreed} />
+          <CostResultCard
+            result={result}
+            breed={selectedBreed}
+            shareConfig={encodeShareConfig({ ...inputs, breedId: selectedBreed.id })}
+          />
 
           {/* #1 — Email capture at the highest-intent moment */}
           <div className="mt-6">

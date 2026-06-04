@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
-import { ArrowRight, ListChecks } from "lucide-react";
+import { ArrowRight, ListChecks, Stethoscope } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Guider — Alt om kæledyrsøkonomi",
@@ -10,7 +10,39 @@ export const metadata: Metadata = {
   alternates: { canonical: "/guides" },
 };
 
-const guides = [
+const guides: { slug: string; href?: string; title: string; desc: string; readTime: string; category: string }[] = [
+  {
+    slug: "allergivenlige-hunde",
+    href: "/lister/allergivenlige-hunde",
+    title: "Allergivenlige hunderacer 2026",
+    desc: "De 10 bedste hypoallergene hunde der fælder mindst — med pris og pasningsbehov.",
+    readTime: "6 min",
+    category: "Liste",
+  },
+  {
+    slug: "familievenlige-hunde",
+    href: "/lister/familievenlige-hunde",
+    title: "Bedste familiehunde 2026",
+    desc: "De 10 mest familievenlige racer — tålmodige, robuste og gode med børn.",
+    readTime: "6 min",
+    category: "Liste",
+  },
+  {
+    slug: "hunde-til-lejlighed",
+    href: "/lister/hunde-til-lejlighed",
+    title: "Bedste hunde til lejlighed",
+    desc: "De 10 racer der trives bedst på mindre plads — rolige og med moderat motionsbehov.",
+    readTime: "5 min",
+    category: "Liste",
+  },
+  {
+    slug: "boernevenlige-katte",
+    href: "/lister/boernevenlige-katte",
+    title: "Bedste katte til børnefamilier",
+    desc: "De 7 mest rolige og tålmodige katteracer til hjem med børn.",
+    readTime: "5 min",
+    category: "Liste",
+  },
   {
     slug: "julegaver-til-hund",
     title: "Julegaver til hund 2026",
@@ -220,11 +252,27 @@ export default function GuidesPage() {
         <ArrowRight className="w-4 h-4 text-mint-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
       </Link>
 
+      <Link
+        href="/dyrlaege-priser"
+        className="group flex items-center gap-4 p-5 mb-8 bg-card border border-border rounded-xl hover:border-navy-300 hover:shadow-sm transition-all"
+      >
+        <div className="w-11 h-11 rounded-xl bg-navy-100 flex items-center justify-center shrink-0">
+          <Stethoscope className="w-5 h-5 text-navy-700" />
+        </div>
+        <div className="flex-1">
+          <h2 className="font-semibold mb-0.5">Dyrlægepriser 2026 — hvad koster behandling?</h2>
+          <p className="text-sm text-muted-foreground">
+            Kastration, tandrensning, vaccination, røntgen, operationer og mere — se prisspænd for hund og kat.
+          </p>
+        </div>
+        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-navy-900 group-hover:translate-x-0.5 transition-all shrink-0" />
+      </Link>
+
       <div className="space-y-4">
         {guides.map((guide) => (
           <Link
             key={guide.slug}
-            href={`/guides/${guide.slug}`}
+            href={guide.href ?? `/guides/${guide.slug}`}
             className="group flex items-center justify-between p-5 bg-card border border-border rounded-xl hover:border-navy-300 hover:shadow-sm transition-all"
           >
             <div className="flex-1 mr-6">

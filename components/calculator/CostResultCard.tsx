@@ -7,12 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lightbulb, TrendingDown, Shield, ArrowRight, GitCompare, AlertTriangle } from "lucide-react";
 import { BreakdownChart } from "./BreakdownChart";
 import { RecommendedProducts } from "@/components/shared/RecommendedProducts";
+import { ShareResultButton } from "@/components/shared/ShareResultButton";
 import { getBreedRecommendedProducts } from "@/data/products";
 import { affiliateUrl } from "@/lib/affiliate";
 
 interface CostResultCardProps {
   result: PetCostResult;
   breed: Breed;
+  /** Encoded share config — viser "Del dit resultat"-knap når sat */
+  shareConfig?: string;
 }
 
 const breakdownLabels: Record<string, string> = {
@@ -27,7 +30,7 @@ const breakdownLabels: Record<string, string> = {
   miscellaneous: "Diverse",
 };
 
-export function CostResultCard({ result, breed }: CostResultCardProps) {
+export function CostResultCard({ result, breed, shareConfig }: CostResultCardProps) {
   const noInsurance = result.breakdown.insurance === 0;
   const insuranceAffiliate = affiliateUrl(
     breed.petType === "dog" ? "https://www.agria.dk/hund/" : "https://www.agria.dk/kat/",
@@ -36,6 +39,13 @@ export function CostResultCard({ result, breed }: CostResultCardProps) {
 
   return (
     <div className="space-y-6">
+      {/* Share result */}
+      {shareConfig && (
+        <div className="flex justify-end">
+          <ShareResultButton config={shareConfig} breedName={breed.name} />
+        </div>
+      )}
+
       {/* Main cost numbers */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard label="Per dag" value={`${result.dailyCost} kr.`} sublabel="inkl. alle udgifter" highlight />

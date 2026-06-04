@@ -16,8 +16,8 @@ const footerLinks = {
   ],
   Guider: [
     { href: "/guides/hvad-koster-en-hund", label: "Hvad koster en hund?" },
-    { href: "/guides/hvad-koster-en-kat", label: "Hvad koster en kat?" },
-    { href: "/guides/billigste-hunderacer", label: "Billigste hunderacer" },
+    { href: "/dyrlaege-priser", label: "Dyrlægepriser" },
+    { href: "/lister/familievenlige-hunde", label: "Bedste familiehunde" },
     { href: "/guides/bedste-hundeforsikring", label: "Bedste hundeforsikring" },
     { href: "/statistik", label: "Statistik" },
   ],

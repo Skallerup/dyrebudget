@@ -6,50 +6,15 @@ import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { formatCurrency } from "@/lib/calculator";
 import { calculatePetCost } from "@/lib/calculator";
 import { generateBreadcrumbJsonLd, generateFAQJsonLd } from "@/lib/seo";
+import { getIndexableComparisons, isIndexableComparison } from "@/lib/comparisons";
+import type { Breed, PetCostResult } from "@/types";
 
 interface Props {
   params: Promise<{ comparison: string }>;
 }
 
 export async function generateStaticParams() {
-  const params: { comparison: string }[] = [];
-
-  const popularDogs = [
-    "labrador",
-    "golden-retriever",
-    "fransk-bulldog",
-    "mops",
-    "beagle",
-    "schaeferhund",
-    "border-collie",
-    "gravhund",
-    "chihuahua",
-    "puddel",
-    "cavapoo",
-    "cocker-spaniel",
-    "rottweiler",
-    "yorkshireterrier",
-    "jack-russell-terrier",
-  ];
-
-  const popularCats = [
-    "huskat",
-    "maine-coon",
-    "ragdoll",
-    "british-shorthair",
-    "norsk-skovkat",
-  ];
-
-  // Generate all unique pairs within each group
-  for (const group of [popularDogs, popularCats]) {
-    for (let i = 0; i < group.length; i++) {
-      for (let j = i + 1; j < group.length; j++) {
-        params.push({ comparison: `${group[i]}-vs-${group[j]}` });
-      }
-    }
-  }
-
-  return params;
+  return getIndexableComparisons().map((comparison) => ({ comparison }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -58,10 +23,67 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const breedA = getBreedBySlug(slugA);
   const breedB = getBreedBySlug(slugB);
   if (!breedA || !breedB) return {};
+  const indexable = isIndexableComparison(slugA, slugB);
   return {
     title: `${breedA.name} vs. ${breedB.name} — Sammenligning af omkostninger`,
     description: `Sammenlign alle omkostninger for ${breedA.name} og ${breedB.name}. Se månedspris, livstidspris, forsikring og sundhedsrisiko side om side.`,
+    alternates: { canonical: `/sammenlign/${comparison}` },
+    // Den lange hale af mindre populære par holdes ude af indekset for at
+    // undgå tyndt-indhold-signaler — men forbliver crawlbar via interne links.
+    robots: indexable
+      ? undefined
+      : { index: false, follow: true, googleBot: { index: false, follow: true } },
   };
+}
+
+// Bygger et kort, unikt afsnit ud fra racernes faktiske dataforskelle,
+// så hver indekseret side har reelt indhold (ikke kun en genbrugt tabel).
+function buildVerdictProse(
+  breedA: Breed,
+  breedB: Breed,
+  costsA: PetCostResult,
+  costsB: PetCostResult
+): string {
+  const cheaper = costsA.monthlyCost <= costsB.monthlyCost ? breedA : breedB;
+  const pricier = cheaper.id === breedA.id ? breedB : breedA;
+  const diff = Math.abs(costsA.monthlyCost - costsB.monthlyCost);
+  const parts: string[] = [];
+
+  parts.push(
+    `${breedA.name} og ${breedB.name} er begge populære valg i Danmark, men de adskiller sig økonomisk. ${cheaper.name} er den billigste i drift med ca. ${formatCurrency(
+      Math.min(costsA.monthlyCost, costsB.monthlyCost)
+    )} om måneden — ${formatCurrency(diff)} mindre end ${pricier.name}.`
+  );
+
+  if (breedA.healthRisk !== breedB.healthRisk) {
+    const higher = breedA.healthRisk === "high" || (breedA.healthRisk === "medium" && breedB.healthRisk === "low") ? breedA : breedB;
+    parts.push(
+      `${higher.name} har den højeste sundhedsrisiko af de to, hvilket typisk betyder højere forsikrings- og dyrlægeudgifter over tid.`
+    );
+  }
+
+  if (breedA.sizeClass !== breedB.sizeClass) {
+    parts.push(
+      `Størrelsen spiller også ind: ${breedA.name} (${breedA.weightKg.min}-${breedA.weightKg.max} kg) mod ${breedB.name} (${breedB.weightKg.min}-${breedB.weightKg.max} kg) påvirker især foderudgiften.`
+    );
+  }
+
+  if (breedA.activityLevel !== breedB.activityLevel) {
+    parts.push(
+      `Aktivitetsniveauet er forskelligt, så overvej hvor meget tid du kan afsætte til motion og aktivering dagligt.`
+    );
+  }
+
+  const lifeA = (breedA.lifespan.min + breedA.lifespan.max) / 2;
+  const lifeB = (breedB.lifespan.min + breedB.lifespan.max) / 2;
+  if (Math.abs(lifeA - lifeB) >= 2) {
+    const longer = lifeA > lifeB ? breedA : breedB;
+    parts.push(
+      `${longer.name} lever typisk længst (${longer.lifespan.min}-${longer.lifespan.max} år), hvilket både betyder flere gode år sammen og en højere samlet livstidsomkostning.`
+    );
+  }
+
+  return parts.join(" ");
 }
 
 export default async function ComparisonPage({ params }: Props) {
@@ -91,6 +113,7 @@ export default async function ComparisonPage({ params }: Props) {
   const cheaper = costsA.monthlyCost <= costsB.monthlyCost ? breedA : breedB;
   const cheaperCost = Math.min(costsA.monthlyCost, costsB.monthlyCost);
   const diff = Math.abs(costsA.monthlyCost - costsB.monthlyCost);
+  const verdictProse = buildVerdictProse(breedA, breedB, costsA, costsB);
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { name: "Sammenlign", path: "/sammenlign" },
@@ -146,6 +169,11 @@ export default async function ComparisonPage({ params }: Props) {
           {" "}— svarende til {formatCurrency(diff * 12)} om året og{" "}
           {formatCurrency(diff * 12 * 12)} over 12 år.
         </p>
+      </div>
+
+      {/* Unik vurdering i prosa — giver siden reelt indhold */}
+      <div className="prose prose-sm max-w-none mb-8 text-muted-foreground leading-relaxed">
+        <p>{verdictProse}</p>
       </div>
 
       {/* Comparison table */}

@@ -1,32 +1,26 @@
 import type { MetadataRoute } from "next";
 import { breeds } from "@/data/breeds";
 import { products } from "@/data/products";
+import { getIndexableComparisons } from "@/lib/comparisons";
+import { treatments } from "@/data/treatments";
+import { collections } from "@/data/collections";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://dyrebudget.dk";
 
-// #4 — Programmatically generate ALL comparison pairs so none are missing from sitemap
-function generateAllComparisons(): string[] {
-  const dogs = breeds.filter((b) => b.petType === "dog").map((b) => b.slug);
-  const cats = breeds.filter((b) => b.petType === "cat").map((b) => b.slug);
-  const pairs: string[] = [];
-  for (const group of [dogs, cats]) {
-    for (let i = 0; i < group.length; i++) {
-      for (let j = i + 1; j < group.length; j++) {
-        pairs.push(`${group[i]}-vs-${group[j]}`);
-      }
-    }
-  }
-  return pairs;
-}
+// Stabil indholdsdato i stedet for `new Date()` ved hver build.
+// Bumpes manuelt når indholdet reelt opdateres — så Google ikke ser
+// "alt ændret hver dag" (et støj-signal der svækker freshness-troværdighed).
+const CONTENT_UPDATED = new Date("2026-06-01T00:00:00Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  const now = CONTENT_UPDATED;
 
   const staticPages = [
     { url: SITE_URL, priority: 1.0, changeFrequency: "weekly" as const },
     { url: `${SITE_URL}/beregner`, priority: 0.9, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/hvad-koster`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/sammenlign`, priority: 0.8, changeFrequency: "monthly" as const },
+    { url: `${SITE_URL}/dyrlaege-priser`, priority: 0.9, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/produkter`, priority: 0.7, changeFrequency: "weekly" as const },
     { url: `${SITE_URL}/huskeliste`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${SITE_URL}/huskeliste/kat`, priority: 0.8, changeFrequency: "monthly" as const },
@@ -83,8 +77,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  // #4 — All programmatically generated comparison pairs (was only 14 before)
-  const allComparisons = generateAllComparisons().map((comp) => ({
+  // Intent-sider pr. race: forsikring + foder
+  const insurancePages = breeds.map((breed) => ({
+    url: `${SITE_URL}/forsikring/${breed.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+  const foodPages = breeds.map((breed) => ({
+    url: `${SITE_URL}/foder/${breed.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  // Dyrlæge-prissider
+  const treatmentPages = treatments.map((t) => ({
+    url: `${SITE_URL}/dyrlaege-priser/${t.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // Listicles
+  const collectionPages = collections.map((c) => ({
+    url: `${SITE_URL}/lister/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  // Kun kuraterede, indekserbare par i sitemap (den lange hale er noindex
+  // og hører ikke hjemme her — beskytter crawl-budget på nyt domæne).
+  const allComparisons = getIndexableComparisons().map((comp) => ({
     url: `${SITE_URL}/sammenlign/${comp}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
@@ -107,6 +132,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...breedPages,
     ...breedGuidePages,
+    ...insurancePages,
+    ...foodPages,
+    ...treatmentPages,
+    ...collectionPages,
     ...allComparisons,
     ...productPages,
   ];
