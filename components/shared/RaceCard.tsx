@@ -3,6 +3,7 @@ import type { Breed } from "@/types";
 import { formatCurrency } from "@/lib/calculator";
 import { ArrowRight, Calculator } from "lucide-react";
 import { BreedImage } from "@/components/shared/BreedImage";
+import { tintForSlug } from "@/lib/tint";
 
 interface RaceCardProps {
   breed: Breed;
@@ -42,6 +43,7 @@ function sizeLabel(size: string): string {
   return map[size] ?? size;
 }
 
+
 // #3 — Restructured: main content links to breed page, footer has two separate CTAs
 export function RaceCard({ breed, showCost = true }: RaceCardProps) {
   const monthlyEstimate =
@@ -54,15 +56,17 @@ export function RaceCard({ breed, showCost = true }: RaceCardProps) {
     <div className="group flex flex-col bg-card border border-border rounded-xl overflow-hidden hover:border-navy-300 hover:shadow-md transition-all">
       {/* Main clickable area → breed detail page */}
       <Link href={`/hvad-koster/${breed.slug}`} className="block flex-1">
-        {/* Breed image */}
-        <div className="relative h-40 w-full bg-muted overflow-hidden">
-          <BreedImage
-            slug={breed.slug}
-            alt={breed.name}
-            petType={breed.petType}
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
+        {/* Breed image i farvet ramme */}
+        <div className={`relative h-44 w-full p-2.5 ${tintForSlug(breed.slug)}`}>
+          <div className="relative w-full h-full rounded-xl overflow-hidden">
+            <BreedImage
+              slug={breed.slug}
+              alt={breed.name}
+              petType={breed.petType}
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            />
+          </div>
         </div>
 
         <div className="p-5 pb-3">

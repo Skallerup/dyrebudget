@@ -98,6 +98,11 @@ export default function HomePage() {
       {/* ── HERO ── */}
       <section className="relative bg-navy-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-navy-700 via-navy-900 to-navy-950" />
+        {/* Dekorative doodles (Adoption Pets-stil) */}
+        <div className="pointer-events-none absolute -top-16 -right-10 w-72 h-72 rounded-full bg-mint-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-16 w-64 h-64 rounded-full bg-coral-500/15 blur-3xl" />
+        <span className="pointer-events-none absolute top-10 right-1/4 text-4xl opacity-20 select-none hidden md:block">🐾</span>
+        <span className="pointer-events-none absolute bottom-16 left-8 text-3xl opacity-20 select-none hidden lg:block">🦴</span>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 md:pt-22 md:pb-28">
           <div className="grid lg:grid-cols-2 gap-14 items-center">
             {/* #10 — order-2 on mobile so calculator shows first on small screens */}
@@ -188,7 +193,7 @@ export default function HomePage() {
       </div>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="bg-muted/40 border-b border-border py-14">
+      <section className="bg-muted/40 bg-paws border-b border-border py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <p className="text-xs font-semibold uppercase tracking-widest text-mint-600 mb-2">Sådan fungerer det</p>
@@ -490,7 +495,7 @@ export default function HomePage() {
       </section>
 
       {/* ── TRUST / E-E-A-T ── */}
-      <section className="bg-muted/40 border-y border-border py-12">
+      <section className="bg-muted/40 bg-paws border-y border-border py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <p className="text-xs font-semibold uppercase tracking-widest text-navy-500 mb-2">Metode & data</p>

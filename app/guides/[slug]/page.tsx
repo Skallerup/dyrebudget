@@ -9,6 +9,7 @@ import { FAQSection } from "@/components/shared/FAQSection";
 import { RelatedLinks } from "@/components/shared/RelatedLinks";
 import { RaceCard } from "@/components/shared/RaceCard";
 import { BreedImage } from "@/components/shared/BreedImage";
+import { tintForSlug } from "@/lib/tint";
 import {
   generateFAQJsonLd,
   generateBreadcrumbJsonLd,
@@ -188,15 +189,17 @@ export default async function BreedBuyerGuidePage({ params }: Props) {
         />
 
         <div className="mb-8 flex items-start gap-6 flex-wrap sm:flex-nowrap">
-          <div className="relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl overflow-hidden bg-muted">
-            <BreedImage
-              slug={breed.slug}
-              alt={breed.name}
-              petType={breed.petType}
-              priority
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, 192px"
-            />
+          <div className={`relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl p-2.5 ${tintForSlug(breed.slug)}`}>
+            <div className="relative w-full h-full rounded-xl overflow-hidden">
+              <BreedImage
+                slug={breed.slug}
+                alt={breed.name}
+                petType={breed.petType}
+                priority
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 192px"
+              />
+            </div>
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-3xl font-bold mb-2">Er en {breed.name} noget for dig?</h1>

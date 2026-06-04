@@ -15,6 +15,7 @@ import { RaceCard } from "@/components/shared/RaceCard";
 import { RelatedLinks } from "@/components/shared/RelatedLinks";
 import { generateBreedJsonLd, generateFAQJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo";
 import { encodeShareConfig } from "@/lib/shareConfig";
+import { tintForSlug } from "@/lib/tint";
 import { BreedImage } from "@/components/shared/BreedImage";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -130,15 +131,17 @@ export default async function BreedPage({ params }: Props) {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start gap-6 flex-wrap sm:flex-nowrap">
-            <div className="relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl overflow-hidden bg-muted">
-              <BreedImage
-                slug={breed.slug}
-                alt={breed.name}
-                petType={breed.petType}
-                priority
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 192px"
-              />
+            <div className={`relative w-full sm:w-48 sm:shrink-0 h-48 rounded-2xl p-2.5 ${tintForSlug(breed.slug)}`}>
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
+                <BreedImage
+                  slug={breed.slug}
+                  alt={breed.name}
+                  petType={breed.petType}
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 192px"
+                />
+              </div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-3 mb-2">
